@@ -1,0 +1,8 @@
+[ 2017-03-05 23:57:48.853 ] Execution started.
+[ 2017-03-05 23:57:48.853 ] Cmdline: ["test_xpflox.rb"]
+[ 2017-03-05 23:57:48.876 ] Git tag: 4f8925a
+[ 2017-03-05 23:57:48.876 ] Temporary path is /tmp/d20170305-3742-y017c2
+[ 2017-03-05 23:57:48.876 ] Variable list follows:
+[ 2017-03-05 23:57:48.876 ] End of variable list.
+[ 2017-03-05 23:57:48.877 ] Process main: Hello World
+[ 2017-03-05 23:57:48.877 ] Execution finished (0.001 s).
