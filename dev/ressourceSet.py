@@ -4,8 +4,9 @@ class Resource():
 	"""docstring for Resource"""
 
 
-	def __init__(type, properties=None , name = None):
-		self.type = type 
+	def __init__(typ, properties=None , name = None):
+		self.typ = typ
+
 		
 
 
