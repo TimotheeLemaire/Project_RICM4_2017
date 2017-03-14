@@ -1,20 +1,6 @@
 from execo import *
-
-nbprocess = 10
-
-set = []
-
-for i in range(nbprocess):
-	set.append(Process("./123Soleil "+str(i) ))
-
-iter = set.__iter__()
-
-print set
-
-action = ParallelActions(set)
-
-action.run()
-
-for i in range(nbprocess):
-	print set[i].stdout
-
+process = Process("ls ")
+process.run()
+print "process:\n%s" + str(process)
+print "process stdout:\n" + process.stdout
+print "process stderr:\n" + process.stderr
