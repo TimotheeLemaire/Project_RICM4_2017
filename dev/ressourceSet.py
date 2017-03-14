@@ -25,6 +25,32 @@ class Resource():
 			self.properties["name"] = name 
 
 
+
+	# Return the name of the resource.
+	# @return [String] the name of the resource
+    def name :
+            return self.properties["name"]
+    
+
+	#Sets the name of the resource.
+    def name(name):
+        self.properties["name"] = name
+        return self
+    
+
+    def ssh_user():
+        return self.properties[:ssh_user]
+    
+    
+    def gw_ssh_user():
+    	return self.properties[:gw_ssh_user]
+    
+	#Returns the name of the resource.
+    def to_s():	
+        return self.properties[:name]
+    
+
+
 	
 
 
