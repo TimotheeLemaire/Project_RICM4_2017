@@ -25,5 +25,8 @@ class Resource():
 			self.properties["name"] = name 
 
 
+	
+
+
 
 
