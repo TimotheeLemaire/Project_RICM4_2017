@@ -30,4 +30,12 @@ docker port test_sshd 22
 
 ssh root@127.0.0.1 -p <numéro de port>
 
+#######################
+
+Test execo's Remote() method avec :
+test2.py
+
+/!\ ajouter '/home/<user>/.ssh/id_rsa' à /root/.ssh
+p-e pas nécessaire si docker et du coup test2.py n'est pas lancé par root.
+
 
