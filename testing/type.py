@@ -21,3 +21,11 @@ l= []
 print(isinstance(l,list ))
 #print(isinstance(tmp,t ))
 
+
+
+g = lambda e : e+e
+print('callable:')
+#print(g(10))
+#print(type(g))
+print (callable(g))
+#print(isinstance(g,function ))
