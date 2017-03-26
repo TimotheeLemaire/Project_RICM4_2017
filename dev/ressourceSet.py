@@ -14,7 +14,7 @@ class Resource():
     # self.param [String] String name
 	# self.return [resource] Resource Object
 	def __init__(self,typ, prop=None , name = None):
-		self.Type = typ #type of the resource
+		self.type = typ #type of the resource
 		self.properties = dict()  #properties of the resources
 
 		if prop: #test si prop est vide 
@@ -35,7 +35,7 @@ class Resource():
 	#Sets the name of the resource.
     def name(self,name):
         self.properties["name"] = name
-        #return self
+        return self
     
 
     def ssh_user(self):
@@ -58,22 +58,22 @@ class Resource():
 
     
   
-#Creates a copy of the resource object.
+    #Creates a copy of the resource object.
     def copy(self):
-        result = Resource(self.Type)
+        result = Resource(self.type)
         result.properties =  self.properties 
         return result
     
 
-#Equality, Two Resource objects are equal if they have the 
-#same type and the same properties as well.
+    #Equality, Two Resource objects are equal if they have the 
+    #same type and the same properties as well.
     def __eq__( self,res ):
-        return self.Type == res.type and self.properties == res.properties
+        return self.type == res.type and self.properties == res.properties
     
 
-#Returns true if self and other are the same object.
+    #Returns true if self and other are the same object.
     def eql( self,res ):
-        if type(self) == type(res) and self.__class__ == res.__class__:
+        if self.type == res.type and self.__class__ == res.__class__:
             for key,value in self.properties:
                 if(res.properties[key] != value):
                     return false 
@@ -143,15 +143,15 @@ class ResourceSet < Resource
     #Add a Resource object to the ResourceSet
         def push(self, resource ):
           self.resources.append( resource )
-          #return self
+          return self
         
 
     # Return the first element which is an object of the Resource Class
         def first (self, type=None ):
             for resource in self.resources:
-                if (type(resource) == type) :
+                if (resource.type == type) :
                     return resource
-                elif resource.kind_of?(ResourceSet) :
+                elif types(resource) == ResourceSet :
                     res = resource.first( type )
                     if (res) :
                         return res 
@@ -166,168 +166,147 @@ class ResourceSet < Resource
                     return resource
 
 
-        def select(self, type=None, props=None , &block):
-                set = ResourceSet.__init__()
-                if not block then
-                        set.properties.replace( self.properties )
-                        self.resources.each { |resource|
-                                if not type or resource.type == type then
-                                        if resource.corresponds( props ) then
-                                                set.resources.push( resource.copy )
-                                        
-                                elsif type != :resource_set and resource.kind_of?(ResourceSet) then
-                                        set.resources.push( resource.select( type, props ) )
+        def select(self, type=None, props=None , block=None):
+            set = ResourceSet()
+            if not block :
+                set.properties = self.properties 
+                for resource in resources :
+                    if not type or resource.type == type :
+                        if resource.corresponds( props ) :
+                            set.resources.push( resource.copy )
                                 
-                        }
-                else
-                        set.properties.replace( self.properties )
-                        self.resources.each { |resource|
-                                if not type or resource.type == type then
-                                        if block.call( resource ) then
-                                                set.resources.push( resource.copy )
-                                        
-                                elsif type != :resource_set and resource.kind_of?(ResourceSet) then
-                                        set.resources.push( resource.select( type, props , &block) )
-                                
-                        }
+                        elif type != :resource_set and resource,ResourceSet) :
+                                set.resources.push( resource.select( type, props ) )
                 
-                return set
-        
+            else :
+                set.properties = self.properties 
+                for resource in resources :
+                    if not type or resource.type == type :
+                        if block( resource ) :
+                            set.resources.push( resource.copy )
+                            
+                    elif type != resource_set and isinstance(resource,ResourceSet) :
+                            set.resources.push( resource.select( type, props , block) )
+            return set
+    
 
         def delete_first(self,resource):
-                self.resources.each_index { |i|
-                        if self.resources[i] == resource then
-                                self.resources.delete_at(i)
-                                return resource
-                        elsif self.resources[i].kind_of?(ResourceSet) then
-                                if self.resources[i].delete_first( resource ) then
-                                        return resource
-                                
-                        
-                }
-                return None
+            for i in range(len(self.resources)) :
+                if self.resources[i] == resource :
+                    self.resources.pop(i)
+                    return resource
+                elif isistance(self.resources[i],ResourceSet) :
+                    if self.resources[i].delete_first( resource ) :
+                        return resource
+            return None
         
 
-        def delete_first_if(self,&block):
-                self.resources.each_index { |i|
-                        if block.call(self.resources[i]) then
-                                return self.resources.delete_at(i)
-                        elsif self.resources[i].kind_of?(ResourceSet) then
-                                if (res = self.resources[i].delete_first_if( &block )) then
-                                        return res
-                                
-                        
-                }
+        def delete_first_if(self,block):
+                for i in range(len(self.resources)) :
+                    if block(self.resources[i]) :
+                        return self.resources.pop(i)
+                    elif isistance(self.resources[i],ResourceSet) :
+                        if (res = self.resources[i].delete_first_if( block )) :
+                            return res
                 return None
         
 
         def delete(self,resource):
                 res = None
-                self.resources.each_index { |i|
-                        if self.resources[i] == resource then
-                                self.resources.delete_at(i)
-                                res = resource
-                        elsif self.resources[i].kind_of?(ResourceSet) then
-                                #if self.resources[i].delete_all( resource ) then
-                                if self.resources[i].delete( resource ) then
-                                        res = resource
-                                
-                        
-                }
+                for i in range(len(self.resources)) :
+                    if self.resources[i] == resource :
+                        self.resources.pop(i)
+                        res = resource
+                    elif isinstance(self.resources[i],ResourceSet) :
+                        #if self.resources[i].delete_all( resource ) :
+                        if self.resources[i].delete( resource ) :
+                            res = resource
                 return res
         
 
-        def delete_if(self,&block):
-                self.resources.each_index { |i|
-                        if block.call(self.resources[i]) then
-                                self.resources.delete_at(i)
-                        elsif self.resources[i].kind_of?(ResourceSet) then
-                                self.resources[i].delete_if( &block )
-                        
-                }
-                return self
+        def delete_if(self,block):
+            for i in range(len(self.resources)) :
+                if block.call(self.resources[i]) :
+                        self.resources.pop(i)
+                elif isinstance(self.resources[i],ResourceSet) :
+                        self.resources[i].delete_if( block )
+            return self
         
 
     #Puts all the resource hierarchy into one ResourceSet.
     #The type can be either :node or :resource_set.
         def flatten(self, type = None ):
-                set = ResourceSet::new
-                self.resources.each { |resource|
-                        if not type or resource.type == type then
-                                set.resources.push( resource.copy )
-                                if resource.kind_of?(ResourceSet) then
-                                        set.resources.last.resources.clear
-                                
-                        
-                        if resource.kind_of?(ResourceSet) then
-                                set.resources.concat( resource.flatten(type).resources )
-                        
-                }
-                return set
+            set = ResourceSet()
+            for resource in self.resources:
+                if not type or resource.type == type :
+                    set.resources.push( resource.copy )
+                    if isinstance(resource,ResourceSet) :
+                        del set.resources[-1].resources[:]
+                if isinstance(resource,ResourceSet) :
+                    set.resources.extend( resource.flatten(type).resources )
+            return set
         
 
-        def flatten! (self,type = None ):
-                set = self.flatten(type)
-                self.resources.replace(set.resources)
-                return self
+        # def flatten! (self,type = None ):
+        def flatten_not (self,type = None ):
+            set = self.flatten(type)
+            self.resources = set.resources 
+            return self
         
 
 
-        alias all flatten
+        # alias all flatten
 
     #Creates groups of increasing size based on
     #the slice_step paramater. This goes until the 
     #size of the ResourceSet.
-        def each_slice( self,type = None, slice_step = 1, &block):
-                i = 1
-                number = 0
-                while true do
-                        resource_set = ResourceSet::new
-                        it = ResourceSetIterator::new(self, type)
-                        #----is slice_step a block? if we call from
-                        #----each_slice_power2 then yes
-                        if slice_step.kind_of?(Proc) then
-                                number = slice_step.call(i)
+    def each_slice( self,type = None, slice_step = 1, block):
+            i = 1
+            number = 0
+            while True :
+                resource_set = ResourceSet()
+                it = ResourceSetIterator(self, type)
+                #----is slice_step a block? if we call from
+                #----each_slice_power2 : yes
+                if isinstance(slice_step,Proc) :
+                        number = slice_step.call(i)
 
-                        elsif slice_step.kind_of?(Array) then
-                          number = slice_step.shift.to_i
-                          else
-                          
-                                number += slice_step
+                elif isinstance(slice_step,list) :
+                    number = slice_step.shift.to_i
+                    else :
+                        number += slice_step
+                return None if number == 0
+                for j in 1..number do
+                        resource = it.resource
+                        if resource :
+                                resource_set.resources.push( resource )
+                        else :
+                            return None
                         
-                  
-                        return None if number == 0
-                        for j in 1..number do
-                                resource = it.resource
-                                if resource then
-                                        resource_set.resources.push( resource )
-                                else
-                                        return None
-                                
-                                it.next
-                        
-                        block.call( resource_set );
-                        i += 1
+                        it.next
+                
+                block.call( resource_set );
+                i += 1
                  
         
 
     #Invokes the block for each set of power of two resources.
-        def each_slice_power2(self, type = None, &block ):
-                self.each_slice( type, lambda { |i| i*i }, &block )
+        def each_slice_power2(self, type = None, block ):
+                self.each_slice( type, lambda { |i| i*i }, block )
         
 
-    def each_slice_double( self,type = None, &block ):
-        self.each_slice( type, lambda { |i| 2**i }, &block )
+    def each_slice_double( self,type = None, block ):
+        self.each_slice( type, lambda { |i| 2**i }, block )
     
         ## Fix Me  is the type really important , or were are going to deal always with nodes
-        def each_slice_array( self,slices=1, &block):
-          self.each_slice( None,slices, &block)
+        def each_slice_array( self,slices=1, block):
+          self.each_slice( None,slices, block)
         
 
     #Calls block once for each element in self, depending on the type of resource.
     #if the type is :resource_set, it is going to iterate over the several resoruce sets defined.
     #:node it is the default type which iterates over all the resources defined in the resource set.
-        def each( self,type = None, &block ):
+        def each( self,type = None, block ):
                 it = ResourceSetIterator::new(self, type)
                 while it.resource do
                         block.call( it.resource )
@@ -359,11 +338,11 @@ class ResourceSet < Resource
           count=0
           resource_set = ResourceSet::new
           it = ResourceSetIterator::new(self,:node)
-          if index.kind_of?(Range) then
+          if isinstance(index,Range) :
                     self.each(:node){ |node|
                             resource=it.resource
-                            if resource then
-                                    if (count >= index.first ) and (count <= index.max) then
+                            if resource :
+                                    if (count >= index.first ) and (count <= index.max) :
                                             resource_set.resources.push( resource )
                                     
                             
@@ -373,10 +352,10 @@ class ResourceSet < Resource
             resource_set.properties=self.properties.clone
                     return resource_set
           
-      if index.kind_of?(String) then
+      if isinstance(index,String) :
       it = ResourceSetIterator::new(self,:resource_set)
         self.each(:resource_set) { |resource_set|
-              if resource_set.properties[:alias] == index then
+              if resource_set.properties[:alias] == index :
                 return resource_set
               
         }
@@ -384,8 +363,8 @@ class ResourceSet < Resource
       #For this case a number is passed and we return a resource Object
           self.each(:node){ |resource|
        resource=it.resource
-           if resource then
-                if count==index then
+           if resource :
+                if count==index :
            #resource_set.resources.push( resource )
                        return resource
                 
@@ -432,7 +411,7 @@ class ResourceSet < Resource
           while i < self.resources.size-1 do
             pos = []
               for j in i+1...self.resources.size
-                                      if self.resources[i].eql?(self.resources[j]) then
+                                      if self.resources[i].eql?(self.resources[j]) :
                 pos.push(j)
                                       
                               
@@ -442,7 +421,7 @@ class ResourceSet < Resource
             i = i + 1 
                       
                       self.resources.each { |x|
-                              if x.instance_of?(ResourceSet) then
+                              if x.instance_of?(ResourceSet) :
                                       x.uniq!
                               
                       }
@@ -452,7 +431,7 @@ class ResourceSet < Resource
     # Generates and return the path of the file which contains the list of the tipe of resource
     #specify by the argument type.
         def resource_file( type=None, update=false )
-                if ( not self.resource_files[type] ) or update then
+                if ( not self.resource_files[type] ) or update :
                         self.resource_files[type] = Tempfile::new("#{type}")
                         resource_set = self.flatten(type)
                         resource_set.each { |resource|
@@ -513,11 +492,11 @@ class ResourceSet < Resource
         def make_taktuk_command(cmd)
                 str_cmd = ""
                 #pd : séparation resource set/noeuds
-                if self.gw != "localhost" then
+                if self.gw != "localhost" :
                         sets = false
                   sets_cmd = ""
                         self.resources.each { |x|
-                                if x.instance_of?(ResourceSet) then
+                                if x.instance_of?(ResourceSet) :
                                         sets = true
                                         sets_cmd += x.make_taktuk_command(cmd)
                                 
@@ -526,7 +505,7 @@ class ResourceSet < Resource
                         nodes = false
                         nodes_cmd = ""
                         self.resources.each { |x|
-                                if x.type == :node then
+                                if x.type == :node :
                                         nodes = true
                                         nodes_cmd += x.make_taktuk_command(cmd)
                                 
@@ -537,7 +516,7 @@ class ResourceSet < Resource
                         nodes_cmd = ""
                         first = ""
                         self.resources.each { |x|
-                                if x.type == :node then
+                                if x.type == :node :
                                         first = x.name if not nodes
                                         nodes = true
                                         nodes_cmd += x.make_taktuk_command(cmd)
@@ -548,13 +527,13 @@ class ResourceSet < Resource
                         sets = false
                         sets_cmd = ""
                         self.resources.each { |x|
-                                if x.instance_of?(ResourceSet) then
+                                if x.instance_of?(ResourceSet) :
                                         sets = true
                                         sets_cmd += x.make_taktuk_command(cmd)
                                 
                         }
-                        if sets then
-                                if nodes then 
+                        if sets :
+                                if nodes : 
                                         str_cmd += " -m #{first} -[ " + sets_cmd + " -]"
                                 else
                                         str_cmd += sets_cmd
@@ -574,18 +553,18 @@ class ResourceSetIterator
                 self.type = type
                 self.current = 0
                 self.resource_set.resources.each_index { |i|
-                        if self.type == self.resource_set.resources[i].type then
+                        if self.type == self.resource_set.resources[i].type :
                                 self.current = i
                                 return
-                        elsif self.resource_set.resources[i].kind_of?(ResourceSet) then
+                        elif isinstance(self.resource_set.resources[i],ResourceSet) :
                                 self.iterator = ResourceSetIterator::new(self.resource_set.resources[i], self.type)
-                                if self.iterator.resource then
+                                if self.iterator.resource :
                                         self.current = i
                                         return
                                 else
                                         self.iterator = None
                                 
-                        elsif not self.type then
+                        elif not self.type :
                                 self.current = i
                                 return
                         
@@ -595,7 +574,7 @@ class ResourceSetIterator
 
         def resource():
                 return None if( self.current >= self.resource_set.resources.size )
-                if self.iterator then
+                if self.iterator :
                         res = self.iterator.resource
                 else
                         res = self.resource_set.resources[self.current]
@@ -607,23 +586,23 @@ class ResourceSetIterator
                 res = None
                 self.current += 1 if not self.iterator
                 while not res and self.current < self.resource_set.resources.size do
-                        if self.iterator then
+                        if self.iterator :
                                 self.iterator.next
                                 res = self.iterator.resource
-                                if not res then
+                                if not res :
                                         self.iterator = None
                                         self.current += 1
                                 
-                        elsif self.type == self.resource_set.resources[self.current].type then
+                        elif self.type == self.resource_set.resources[self.current].type :
                                 res = self.resource_set.resources[self.current]
-                        elsif self.resource_set.resources[self.current].kind_of?(ResourceSet) then
+                        elif isinstance(self.resource_set.resources[self.current],ResourceSet) :
                                 self.iterator = ResourceSetIterator::new(self.resource_set.resources[self.current], self.type)
                                 res = self.iterator.resource
-                                if not res then
+                                if not res :
                                         self.iterator = None
                                         self.current += 1
                                 
-                        elsif not self.type then
+                        elif not self.type :
                                 res = self.resource_set.resources[self.current]
                         else
                                 self.current += 1

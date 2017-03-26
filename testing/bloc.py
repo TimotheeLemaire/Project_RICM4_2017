@@ -23,11 +23,17 @@ class emps:
 			for e in self.l :
 				if bloc(e) :
 					print(e.name)
+					
+	def deli(self,emp):
+		for e in self.l :
+			if e == emp : 
+				self.l.remove(e)
+		return self		
 			
 class emp:
 	def __init__(self,nom,salaire):
-		self.name = nom ;
-		self.salary = salaire  ;
+		self.name = nom 
+		self.salary = salaire  
 		
 e1 = emp("e1",5)
 e2 = emp("e2",7)
@@ -51,4 +57,11 @@ test = lambda e: e.salary > 10
 
 print(test(e1))
 print(test(e4))
-	
+
+print (e1==e1)
+print (e1==e2)
+
+test_e = employees.deli(e3)
+
+employees.select(lambda e: e.salary > 10)
+test_e.select(lambda e: e.salary > 10)
