@@ -52,8 +52,12 @@ class Resource():
 
     def corresponds(self, props ):
         for key,value in props:
-            if (self.properties[key] != value):
-                return False
+            if callable(value) :
+                if not value(self.properties[key]):
+                    return False
+            else :
+                if (self.properties[key] != value):
+                    return False
         return True
 
     
@@ -201,7 +205,7 @@ class ResourceSet < Resource
             return None
         
 
-        def delete_first_if(self,block):
+        def delete_first_if(self,block=None):
                 for i in range(len(self.resources)) :
                     if block(self.resources[i]) :
                         return self.resources.pop(i)
@@ -224,9 +228,9 @@ class ResourceSet < Resource
                 return res
         
 
-        def delete_if(self,block):
+        def delete_if(self,block=None):
             for i in range(len(self.resources)) :
-                if block.call(self.resources[i]) :
+                if block(self.resources[i]) :
                         self.resources.pop(i)
                 elif isinstance(self.resources[i],ResourceSet) :
                         self.resources[i].delete_if( block )
@@ -260,7 +264,7 @@ class ResourceSet < Resource
     #Creates groups of increasing size based on
     #the slice_step paramater. This goes until the 
     #size of the ResourceSet.
-    def each_slice( self,type = None, slice_step = 1, block):
+    def each_slice( self,type = None, slice_step = 1, block=None):
             i = 1
             number = 0
             while True :
@@ -268,8 +272,10 @@ class ResourceSet < Resource
                 it = ResourceSetIterator(self, type)
                 #----is slice_step a block? if we call from
                 #----each_slice_power2 : yes
-                if isinstance(slice_step,Proc) :
-                        number = slice_step.call(i)
+                
+                #if isinstance(slice_step,Proc) :
+                if callable(slice_step):
+                    number = slice_step(i)
 
                 elif isinstance(slice_step,list) :
                     number = slice_step.shift.to_i
@@ -285,43 +291,41 @@ class ResourceSet < Resource
                         
                         it.next
                 
-                block.call( resource_set );
+                block( resource_set );
                 i += 1
                  
         
 
     #Invokes the block for each set of power of two resources.
-        def each_slice_power2(self, type = None, block ):
-                self.each_slice( type, lambda { |i| i*i }, block )
+        def each_slice_power2(self, type = None, block=None ):
+            self.each_slice( type, lambda i :  i*i , block )
         
 
-    def each_slice_double( self,type = None, block ):
-        self.each_slice( type, lambda { |i| 2**i }, block )
+    def each_slice_double( self,type = None, block=None ):
+        self.each_slice( type, lambda i :  2**i , block )
     
         ## Fix Me  is the type really important , or were are going to deal always with nodes
-        def each_slice_array( self,slices=1, block):
+        def each_slice_array( self,slices=1, block=None):
           self.each_slice( None,slices, block)
         
 
     #Calls block once for each element in self, depending on the type of resource.
     #if the type is :resource_set, it is going to iterate over the several resoruce sets defined.
     #:node it is the default type which iterates over all the resources defined in the resource set.
-        def each( self,type = None, block ):
-                it = ResourceSetIterator::new(self, type)
-                while it.resource do
-                        block.call( it.resource )
-                        it.next
+        def each( self,type = None, block=None ):
+                it = ResourceSetIterator(self, type)
+                while it.resource :
+                    block( it.resource )
+                    it.next
                 
         
-    
+    """TODO !!! """
     # Returns the number of resources in the ResourceSet
     # self.return [Integer] the number of resources
     def length(self):
-                count=0
-                self.each(:node){ |resource|
-                        count+=1
-                }
-                return count
+        count=0
+        self.each("node",lambda count : count+=1) # impossible d'incrémenter en fonction lambda
+        return count
         
 
     # Returns a subset of the ResourceSet.
@@ -336,9 +340,10 @@ class ResourceSet < Resource
     #   all[0]  return just one resource.
     def __getitem__( self,index ):
           count=0
-          resource_set = ResourceSet::new
-          it = ResourceSetIterator::new(self,:node)
-          if isinstance(index,Range) :
+          resource_set = ResourceSet   
+          it = ResourceSetIterator(self,:node)
+          if isinstance(index,Range) :   #:node équivalent à "node"
+            for #demande au prof un équivalent du lambda calcul. 
                     self.each(:node){ |node|
                             resource=it.resource
                             if resource :
@@ -353,7 +358,7 @@ class ResourceSet < Resource
                     return resource_set
           
       if isinstance(index,String) :
-      it = ResourceSetIterator::new(self,:resource_set)
+      it = ResourceSetIterator(self,:resource_set)
         self.each(:resource_set) { |resource_set|
               if resource_set.properties[:alias] == index :
                 return resource_set
@@ -382,7 +387,7 @@ class ResourceSet < Resource
                 return resource
             }
         else
-            resource_array=Array::new
+            resource_array=Array
             self.each(:node){ |resource|
                 resource_array.push( resource )
                 }
@@ -431,22 +436,22 @@ class ResourceSet < Resource
     # Generates and return the path of the file which contains the list of the tipe of resource
     #specify by the argument type.
         def resource_file( type=None, update=false )
-                if ( not self.resource_files[type] ) or update :
-                        self.resource_files[type] = Tempfile::new("#{type}")
-                        resource_set = self.flatten(type)
-                        resource_set.each { |resource|
-                                self.resource_files[type].puts( resource.properties[:name] )
-                        }
-                        self.resource_files[type].close
-                        File.chmod(0644, self.resource_files[type].path)
-                
-                return self.resource_files[type].path
+            if ( not self.resource_files[type] ) or update :
+                    self.resource_files[type] = Tempfile("#{type}")
+                    resource_set = self.flatten(type)
+                    resource_set.each { |resource|
+                            self.resource_files[type].puts( resource.properties[:name] )
+                    }
+                    self.resource_files[type].close
+                    File.chmod(0644, self.resource_files[type].path)
+            
+            return self.resource_files[type].path
         
 
     #Generates and return the path of the file which contains the list  of the nodes' hostnames. Sometimes it is handy to have it.
     #eg. Use it with mpi.    
-        def node_file( update=false )
-                resource_file( :node, update )
+    def node_file( update=false )
+            resource_file( :node, update )
         
 
     alias nodefile node_file
@@ -470,7 +475,7 @@ class ResourceSet < Resource
     #Generates a directory.xml file for using as a resources 
     #For Gush.
     def make_gush_file( update = false)
-        gush_file = File::new("directory.xml","w+")
+        gush_file = File("directory.xml","w+")
         gush_file.puts("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
         gush_file.puts("<gush>")
         resource_set = self.flatten(:node)
@@ -557,7 +562,7 @@ class ResourceSetIterator
                                 self.current = i
                                 return
                         elif isinstance(self.resource_set.resources[i],ResourceSet) :
-                                self.iterator = ResourceSetIterator::new(self.resource_set.resources[i], self.type)
+                                self.iterator = ResourceSetIterator(self.resource_set.resources[i], self.type)
                                 if self.iterator.resource :
                                         self.current = i
                                         return
@@ -582,7 +587,7 @@ class ResourceSetIterator
                 return res
         
 
-        def next
+        def next():
                 res = None
                 self.current += 1 if not self.iterator
                 while not res and self.current < self.resource_set.resources.size do
@@ -596,7 +601,7 @@ class ResourceSetIterator
                         elif self.type == self.resource_set.resources[self.current].type :
                                 res = self.resource_set.resources[self.current]
                         elif isinstance(self.resource_set.resources[self.current],ResourceSet) :
-                                self.iterator = ResourceSetIterator::new(self.resource_set.resources[self.current], self.type)
+                                self.iterator = ResourceSetIterator(self.resource_set.resources[self.current], self.type)
                                 res = self.iterator.resource
                                 if not res :
                                         self.iterator = None
