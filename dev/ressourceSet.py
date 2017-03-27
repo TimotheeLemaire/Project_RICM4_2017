@@ -265,34 +265,34 @@ class ResourceSet < Resource
     #the slice_step paramater. This goes until the 
     #size of the ResourceSet.
     def each_slice( self,type = None, slice_step = 1, block=None):
-            i = 1
-            number = 0
-            while True :
-                resource_set = ResourceSet()
-                it = ResourceSetIterator(self, type)
-                #----is slice_step a block? if we call from
-                #----each_slice_power2 : yes
-                
-                #if isinstance(slice_step,Proc) :
-                if callable(slice_step):
-                    number = slice_step(i)
+        i = 1
+        number = 0
+        while True :
+            resource_set = ResourceSet()
+            it = ResourceSetIterator(self, type)
+            #----is slice_step a block? if we call from
+            #----each_slice_power2 : yes
+            
+            #if isinstance(slice_step,Proc) :
+            if callable(slice_step):
+                number = slice_step(i)
 
-                elif isinstance(slice_step,list) :
-                    number = slice_step.shift.to_i
+            elif isinstance(slice_step,list) :
+                number = slice_step.shift.to_i
+                else :
+                    number += slice_step
+            return None if number == 0
+            for j in 1..number do
+                    resource = it.resource
+                    if resource :
+                            resource_set.resources.push( resource )
                     else :
-                        number += slice_step
-                return None if number == 0
-                for j in 1..number do
-                        resource = it.resource
-                        if resource :
-                                resource_set.resources.push( resource )
-                        else :
-                            return None
-                        
-                        it.next
-                
-                block( resource_set );
-                i += 1
+                        return None
+                    
+                    it.next
+            
+            block( resource_set );
+            i += 1
                  
         
 
@@ -312,21 +312,32 @@ class ResourceSet < Resource
     #Calls block once for each element in self, depending on the type of resource.
     #if the type is :resource_set, it is going to iterate over the several resoruce sets defined.
     #:node it is the default type which iterates over all the resources defined in the resource set.
-        def each( self,type = None, block=None ):
-                it = ResourceSetIterator(self, type)
-                while it.resource :
-                    block( it.resource )
-                    it.next
+    def each( self,type = None, block=None ):
+        it = ResourceSetIterator(self, type)
+        while it.resource :
+            block( it.resource )
+            it.next
                 
         
     """TODO !!! """
     # Returns the number of resources in the ResourceSet
     # self.return [Integer] the number of resources
+    """
     def length(self):
         count=0
         self.each("node",lambda count : count+=1) # impossible d'incrémenter en fonction lambda
         return count
-        
+"""
+
+    def lentgth(self):
+        count = 0 
+        it = ResourceSetIterator(self, "node")
+        while it.resource :
+            #block( it.resource )
+            count += 1
+            it.next
+        return count
+    
 
     # Returns a subset of the ResourceSet.
     # self.note It can be used with a range as a parameter.
@@ -339,31 +350,29 @@ class ResourceSet < Resource
     #   all["lyon"] extract the resources form lyon cluster
     #   all[0]  return just one resource.
     def __getitem__( self,index ):
-          count=0
-          resource_set = ResourceSet   
-          it = ResourceSetIterator(self,:node)
-          if isinstance(index,Range) :   #:node équivalent à "node"
-            for #demande au prof un équivalent du lambda calcul. 
-                    self.each(:node){ |node|
-                            resource=it.resource
-                            if resource :
-                                    if (count >= index.first ) and (count <= index.max) :
-                                            resource_set.resources.push( resource )
-                                    
-                            
-                            count+=1
-                            it.next
-                    }
-            resource_set.properties=self.properties.clone
+        count=0
+        resource_set = ResourceSet()   
+        it = ResourceSetIterator(self,"node")#:node équivalent à "node"
+        if isinstance(index,list) : #type range en python 3 
+            it2= ResourceSetIterator(self, "node")  #list équivalent ruby de range 
+            while it2.resource : #demande au prof un équivalent du lambda calcul. 
+                resource=it.resource
+                if resource :
+                    if (count >= index.first ) and (count <= max(index)) :
+                        resource_set.resources.push( resource )
+                        count+=1
+                        it.next
+                resource_set.properties=self.properties.clone
                     return resource_set
+                it2.next
           
-      if isinstance(index,String) :
-      it = ResourceSetIterator(self,:resource_set)
-        self.each(:resource_set) { |resource_set|
-              if resource_set.properties[:alias] == index :
+        if isinstance(index,str) :
+            it = ResourceSetIterator(self,:"resource_set")
+            self.each(:resource_set) { |resource_set|
+            if resource_set.properties["alias"] == index :
                 return resource_set
-              
-        }
+                      
+                }
      
       #For this case a number is passed and we return a resource Object
           self.each(:node){ |resource|
@@ -371,9 +380,7 @@ class ResourceSet < Resource
            if resource :
                 if count==index :
            #resource_set.resources.push( resource )
-                       return resource
-                
-       
+                    return resource
                count+=1
        it.next
           }
