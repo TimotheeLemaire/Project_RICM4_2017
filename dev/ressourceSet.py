@@ -33,7 +33,7 @@ class Resource():
     
 
 	#Sets the name of the resource.
-    def name(self,name):
+    def name_equal(self,name):
         self.properties["name"] = name
         return self
     
@@ -71,7 +71,7 @@ class Resource():
 
     #Equality, Two Resource objects are equal if they have the 
     #same type and the same properties as well.
-    def __eq__( self,res ):
+    def __eq__( self,res ): 
         return self.type == res.type and self.properties == res.properties
     
 
@@ -109,7 +109,7 @@ class Resource():
 
 
 
-
+"""TODO"""
 #Use to make the list of machines for
 #the taktuk command
     def make_taktuk_command(cmd):
@@ -145,7 +145,8 @@ class ResourceSet < Resource
         
 
     #Add a Resource object to the ResourceSet
-        def push(self, resource ):
+    #//on devrait peut être le renommer en append ? 
+        def append(self, resource ):
           self.resources.append( resource )
           return self
         
@@ -177,20 +178,20 @@ class ResourceSet < Resource
                 for resource in resources :
                     if not type or resource.type == type :
                         if resource.corresponds( props ) :
-                            set.resources.push( resource.copy )
+                            set.resources.append( resource.copy )
                                 
                         elif type != :resource_set and resource,ResourceSet) :
-                                set.resources.push( resource.select( type, props ) )
+                                set.resources.append( resource.select( type, props ) )
                 
             else :
                 set.properties = self.properties 
                 for resource in resources :
                     if not type or resource.type == type :
                         if block( resource ) :
-                            set.resources.push( resource.copy )
+                            set.resources.append( resource.copy )
                             
                     elif type != resource_set and isinstance(resource,ResourceSet) :
-                            set.resources.push( resource.select( type, props , block) )
+                            set.resources.append( resource.select( type, props , block) )
             return set
     
 
@@ -231,9 +232,9 @@ class ResourceSet < Resource
         def delete_if(self,block=None):
             for i in range(len(self.resources)) :
                 if block(self.resources[i]) :
-                        self.resources.pop(i)
+                    self.resources.pop(i)
                 elif isinstance(self.resources[i],ResourceSet) :
-                        self.resources[i].delete_if( block )
+                    self.resources[i].delete_if( block )
             return self
         
 
@@ -243,7 +244,7 @@ class ResourceSet < Resource
             set = ResourceSet()
             for resource in self.resources:
                 if not type or resource.type == type :
-                    set.resources.push( resource.copy )
+                    set.resources.append( resource.copy )
                     if isinstance(resource,ResourceSet) :
                         del set.resources[-1].resources[:]
                 if isinstance(resource,ResourceSet) :
@@ -285,7 +286,7 @@ class ResourceSet < Resource
             for j in 1..number do
                     resource = it.resource
                     if resource :
-                            resource_set.resources.push( resource )
+                            resource_set.resources.append( resource )
                     else :
                         return None
                     
@@ -353,21 +354,27 @@ class ResourceSet < Resource
         count=0
         resource_set = ResourceSet()   
         it = ResourceSetIterator(self,"node")#:node équivalent à "node"
-        if isinstance(index,list) : #type range en python 3 
-            it2= ResourceSetIterator(self, "node")  #list équivalent ruby de range 
-            while it2.resource : #demande au prof un équivalent du lambda calcul. 
+        if isinstance(index,list) : #type range en python 3 #list équivalent ruby de range 
+            #it2 est utile pour correspondre à self.each(:node) { |node| ... } en ruby
+            it2= ResourceSetIterator(self, "node")  
+            while it2.resource : #demande au prof un équivalent du lambda calcul.  
                 resource=it.resource
                 if resource :
-                    if (count >= index.first ) and (count <= max(index)) :
-                        resource_set.resources.push( resource )
-                        count+=1
-                        it.next
-                resource_set.properties=self.properties.clone
-                    return resource_set
-                it2.next
+                    if (count >= index[0] ) and (count <= max(index)) :
+                        resource_set.resources.append( resource )
+                count+=1
+                it.next
+                
+            resource_set.properties=self.properties.copy() #properties est un dict ok 
+            return resource_set
           
         if isinstance(index,str) :
-            it = ResourceSetIterator(self,:"resource_set")
+            it = ResourceSetIterator(self,"resource_set")
+            #it2 équivalent au  self.each(:resource_set) { |resource_set|
+            it2= ResourceSetIterator(self, "resource_set")  
+            while it2.resource :
+
+                it2.next
             self.each(:resource_set) { |resource_set|
             if resource_set.properties["alias"] == index :
                 return resource_set
@@ -396,7 +403,7 @@ class ResourceSet < Resource
         else
             resource_array=Array
             self.each(:node){ |resource|
-                resource_array.push( resource )
+                resource_array.append( resource )
                 }
             return resource_array
         
@@ -424,7 +431,7 @@ class ResourceSet < Resource
             pos = []
               for j in i+1...self.resources.size
                                       if self.resources[i].eql?(self.resources[j]) :
-                pos.push(j)
+                pos.append(j)
                                       
                               
             pos.reverse.each { |p|
