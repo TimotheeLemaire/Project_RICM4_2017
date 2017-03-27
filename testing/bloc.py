@@ -55,13 +55,22 @@ employees.select()
 
 test = lambda e: e.salary > 10
 
+c= 0
+
+def f(e):	
+	if e.salary < 10 :
+		c += 1 
+	return e.salary < 10
+"""
 print(test(e1))
 print(test(e4))
 
 print (e1==e1)
 print (e1==e2)
-
+"""
 test_e = employees.deli(e3)
 
-employees.select(lambda e: e.salary > 10)
-test_e.select(lambda e: e.salary > 10)
+employees.select(f)
+
+print(c)
+#test_e.select(lambda e: e.salary > 10)

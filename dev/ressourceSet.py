@@ -25,6 +25,8 @@ class Resource():
 		if name :
 			self.properties["name"] = name 
 
+ #     __getattribute__(...)
+ # |      x.__getattribute__('name') <==> x.name
 
 	# Return the name of the resource.
 	# self.return [String] the name of the resource
@@ -80,12 +82,10 @@ class Resource():
         if self.type == res.type and self.__class__ == res.__class__:
             for key,value in self.properties:
                 if(res.properties[key] != value):
-                    return false 
-            return true 
+                    return False 
+            return True 
         else :
-            return false
-	
-    
+            return False
 
 	#Returns the name of the gateway
 	def gateway(self):
@@ -215,7 +215,7 @@ class ResourceSet < Resource
                             return res
                 return None
         
-
+        #del ? __del__
         def delete(self,resource):
                 res = None
                 for i in range(len(self.resources)) :
@@ -315,9 +315,9 @@ class ResourceSet < Resource
     #:node it is the default type which iterates over all the resources defined in the resource set.
     def each( self,type = None, block=None ):
         it = ResourceSetIterator(self, type)
-        while it.resource :
-            block( it.resource )
-            it.next
+        while it.resource() :
+            block( it.resource() )
+            it.next()
                 
         
     """TODO !!! """
@@ -329,14 +329,15 @@ class ResourceSet < Resource
         self.each("node",lambda count : count+=1) # impossible d'incrémenter en fonction lambda
         return count
 """
-
+ # |      x.__getattribute__('name') <==> x.name
+        #__getattribute('resource')
     def lentgth(self):
         count = 0 
         it = ResourceSetIterator(self, "node")
-        while it.resource :
+        while it.resource() :
             #block( it.resource )
             count += 1
-            it.next
+            it.next()
         return count
     
 
@@ -357,13 +358,13 @@ class ResourceSet < Resource
         if isinstance(index,list) : #type range en python 3 #list équivalent ruby de range 
             #it2 est utile pour correspondre à self.each(:node) { |node| ... } en ruby
             it2= ResourceSetIterator(self, "node")  
-            while it2.resource : #demande au prof un équivalent du lambda calcul.  
-                resource=it.resource
+            while it2.resource() :
+                resource=it.resource()
                 if resource :
                     if (count >= index[0] ) and (count <= max(index)) :
                         resource_set.resources.append( resource )
                 count+=1
-                it.next
+                it.next()
                 
             resource_set.properties=self.properties.copy() #properties est un dict ok 
             return resource_set
@@ -371,56 +372,57 @@ class ResourceSet < Resource
         if isinstance(index,str) :
             it = ResourceSetIterator(self,"resource_set")
             #it2 équivalent au  self.each(:resource_set) { |resource_set|
-            it2= ResourceSetIterator(self, "resource_set")  
-            while it2.resource :
-
-                it2.next
-            self.each(:resource_set) { |resource_set|
-            if resource_set.properties["alias"] == index :
-                return resource_set
-                      
-                }
+            it2 = ResourceSetIterator(self, "resource_set")  
+            while it2.resource() :
+                if resource_set.properties["alias"] == index :
+                    return resource_set
+                it2.next()
      
       #For this case a number is passed and we return a resource Object
-          self.each(:node){ |resource|
-       resource=it.resource
-           if resource :
+          
+        it2= ResourceSetIterator(self, "node")  
+        while it2.resource() :
+            resource=it.resource()
+            if resource :
                 if count==index :
-           #resource_set.resources.push( resource )
+            #resource_set.resources.push( resource )
                     return resource
-               count+=1
-       it.next
-          }
+                count+=1
+            it.next()
+            it2.next()
     
 
     # Returns a resouce or an array of resources.
     # self.return [Resource] a resource or array of resources
-    def to_resource
-            if self.length == 1
-            self.each(:node){ |resource|
+    def to_resource(self)  :
+        if self.length() == 1 :
+            
+
+
+            self.each("node"){ |resource|
                 return resource
             }
-        else
-            resource_array=Array
-            self.each(:node){ |resource|
+        else :
+            resource_alist= [] 
+            self.each("node"){ 
                 resource_array.append( resource )
                 }
             return resource_array
         
     
 
-        def ==( set )
+        def __eq__( set ):
                 super and self.resources == set.resources
         
 
     #Equality between to resoruce sets.
-        def eql?( set )
+        def eql( set ) :
                 super and self.resources == set.resources
         
 
     # Returns a ResourceSet with unique elements.
     # self.return [ResourceSet]     with unique elements
-        def uniq
+        def uniq():
                 set = self.copy
                 return set.uniq!
         
@@ -508,7 +510,7 @@ class ResourceSet < Resource
     #It takes into account if the resources are grouped under
     #different gatways in order to perform this execution more
         #efficiently.
-        def make_taktuk_command(cmd)
+        def make_taktuk_command(self)
                 str_cmd = ""
                 #pd : séparation resource set/noeuds
                 if self.gw != "localhost" :
@@ -530,7 +532,7 @@ class ResourceSet < Resource
                                 
                         }
                   str_cmd += " -l #{self.gw_ssh_user} -m #{self.gw} -[ -l #{self.ssh_user} " + nodes_cmd + " downcast exec [ #{cmd} ] -]" if nodes
-                else
+                else :
                         nodes = false
                         nodes_cmd = ""
                         first = ""
@@ -564,7 +566,9 @@ class ResourceSet < Resource
 
 
 
-class ResourceSetIterator
+class ResourceSetIterator:
+        #current : élement courant 
+        #
         attr_accessor :current, :iterator, :resource_set, :type
         def initialize( resource_set, type=None)
                 self.resource_set = resource_set
@@ -590,13 +594,18 @@ class ResourceSetIterator
                 }
                 self.current = self.resource_set.resources.size
         
-
+ #         __getattribute__(...)
+ # |      x.__getattribute__('name') <==> x.name
+        #__getattribute('resource')
+        #
+        #
         def resource():
                 return None if( self.current >= self.resource_set.resources.size )
                 if self.iterator :
-                        res = self.iterator.resource
-                else
-                        res = self.resource_set.resources[self.current]
+                    res = self.iterator.resource
+
+                else :
+                    res = self.resource_set.resources[self.current]
                 
                 return res
         

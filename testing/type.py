@@ -25,3 +25,9 @@ l= []
 #print(isinstance(range(10),list))
 
 print(isinstance("yo",str ))
+l= []
+g = lambda e : l.append(e)
+p = lambda a : return a 
+g("10")
+print (p("a"))
+#print (l)
