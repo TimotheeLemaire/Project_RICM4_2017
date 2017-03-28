@@ -353,43 +353,43 @@ class ResourceSet < Resource
     #   all[0]  return just one resource.
     def __getitem__( self,index ):
         count=0
-        resource_set = ResourceSet()   
-        it = ResourceSetIterator(self,"node")#:node équivalent à "node"
-        if isinstance(index,list) : #type range en python 3 #list équivalent ruby de range 
-            #it2 est utile pour correspondre à self.each(:node) { |node| ... } en ruby
-            it2= ResourceSetIterator(self, "node")  
-            while it2.resource() :
-                resource=it.resource()
-                if resource :
-                    if (count >= index[0] ) and (count <= max(index)) :
-                        resource_set.resources.append( resource )
-                count+=1
-                it.next()
-                
-            resource_set.properties=self.properties.copy() #properties est un dict ok 
-            return resource_set
-          
-        if isinstance(index,str) :
-            it = ResourceSetIterator(self,"resource_set")
-            #it2 équivalent au  self.each(:resource_set) { |resource_set|
-            it2 = ResourceSetIterator(self, "resource_set")  
-            while it2.resource() :
-                if resource_set.properties["alias"] == index :
-                    return resource_set
-                it2.next()
-     
-      #For this case a number is passed and we return a resource Object
-          
-        it2= ResourceSetIterator(self, "node")  
-        while it2.resource() :
-            resource=it.resource()
+        resource_set = ResourceSet::new
+        it = ResourceSetIterator::new(self,:node)
+        if isinstance(index,list) :
+                self.each(:node){ |node|
+            resource=it.resource
             if resource :
-                if count==index :
-            #resource_set.resources.push( resource )
-                    return resource
-                count+=1
-            it.next()
-            it2.next()
+                if (count >= index.first ) and (count <= index.max) :
+                                        resource_set.resources.push( resource )
+                                
+                        
+                        count+=1
+                        it.next
+                }
+        resource_set.properties=self.properties.clone
+                return resource_set
+      
+          if index.kind_of?(String) :
+          it = ResourceSetIterator::new(self,:resource_set)
+            self.each(:resource_set) { |resource_set|
+                  if resource_set.properties[:alias] == index :
+                    return resource_set
+                  
+            }
+         
+          #For this case a number is passed and we return a resource Object
+              self.each(:node){ |resource|
+           resource=it.resource
+               if resource :
+                    if count==index :
+               #resource_set.resources.push( resource )
+                           return resource
+                    
+           
+                   count+=1
+           it.next
+              }
+        
     
 
     # Returns a resouce or an array of resources.
@@ -466,11 +466,11 @@ class ResourceSet < Resource
 
     #Generates and return the path of the file which contains the list  of the nodes' hostnames. Sometimes it is handy to have it.
     #eg. Use it with mpi.    
-    def node_file( update=false )
-            resource_file( :node, update )
+    def node_file( update=false ):
+            resource_file( "node", update )
         
 
-    alias nodefile node_file
+    #alias nodefile node_file
 
     def gen_keys(type=None )
         puts "Creating public keys for cluster ssh comunication"
@@ -568,30 +568,33 @@ class ResourceSet < Resource
 
 class ResourceSetIterator:
         #current : élement courant 
+        #iterator : resource set pour parcourir les resource_set 
+        #resource_set: la resource initale 
+        #type : le type de la resource initiale
         #
-        attr_accessor :current, :iterator, :resource_set, :type
-        def initialize( resource_set, type=None)
+        #
+        #attr_accessor :current, :iterator, :resource_set, :type
+        def initialize(self, resource_set, type=None)
                 self.resource_set = resource_set
                 self.iterator = None
                 self.type = type
                 self.current = 0
-                self.resource_set.resources.each_index { |i|
-                        if self.type == self.resource_set.resources[i].type :
+               
+                for i in range(len(resource_set.resources)) :
+                    if self.type == self.resource_set.resources[i].type :
                                 self.current = i
-                                return
-                        elif isinstance(self.resource_set.resources[i],ResourceSet) :
-                                self.iterator = ResourceSetIterator(self.resource_set.resources[i], self.type)
-                                if self.iterator.resource :
-                                        self.current = i
-                                        return
-                                else
-                                        self.iterator = None
+                                return 
+                    elif isinstance(self.resource_set.resources[i],ResourceSet) :
+                        self.iterator = ResourceSetIterator(self.resource_set.resources[i], self.type)
+                        if self.iterator.resource :
+                            self.current = i
+                            return
+                        else
+                            self.iterator = None
                                 
-                        elif not self.type :
-                                self.current = i
-                                return
-                        
-                }
+                    elif not self.type :
+                        self.current = i
+                        return
                 self.current = self.resource_set.resources.size
         
  #         __getattribute__(...)
@@ -599,10 +602,11 @@ class ResourceSetIterator:
         #__getattribute('resource')
         #
         #
-        def resource():
-                return None if( self.current >= self.resource_set.resources.size )
+        def resouce(self):
+                if( self.current >= self.resource_set.resources.size ):
+                    return None 
                 if self.iterator :
-                    res = self.iterator.resource
+                    res = self.iterator.resource()
 
                 else :
                     res = self.resource_set.resources[self.current]
@@ -610,34 +614,45 @@ class ResourceSetIterator:
                 return res
         
 
-        def next():
-                res = None
-                self.current += 1 if not self.iterator
-                while not res and self.current < self.resource_set.resources.size do
-                        if self.iterator :
-                                self.iterator.next
-                                res = self.iterator.resource
-                                if not res :
-                                        self.iterator = None
-                                        self.current += 1
-                                
-                        elif self.type == self.resource_set.resources[self.current].type :
-                                res = self.resource_set.resources[self.current]
-                        elif isinstance(self.resource_set.resources[self.current],ResourceSet) :
-                                self.iterator = ResourceSetIterator(self.resource_set.resources[self.current], self.type)
-                                res = self.iterator.resource
-                                if not res :
-                                        self.iterator = None
-                                        self.current += 1
-                                
-                        elif not self.type :
-                                res = self.resource_set.resources[self.current]
-                        else
-                                self.current += 1
-                        
-                
-                return self
+        def next(self):
+            res = None
+            self.current += 1 if not self.iterator
+            while not res and self.current < self.resource_set.resources.size : 
+                    if self.iterator :
+                            self.iterator.next
+                            res = self.iterator.resource
+                            if not res :
+                                    self.iterator = None
+                                    self.current += 1
+                            
+                    elif self.type == self.resource_set.resources[self.current].type :
+                            res = self.resource_set.resources[self.current]
+                    elif isinstance(self.resource_set.resources[self.current],ResourceSet) :
+                            self.iterator = ResourceSetIterator(self.resource_set.resources[self.current], self.type)
+                            res = self.iterator.resource()
+                            if not res :
+                                    self.iterator = None
+                                    self.current += 1
+                            
+                    elif not self.type :
+                            res = self.resource_set.resources[self.current]
+                    else
+                            self.current += 1
+                    
+            if( self.current >= self.resource_set.resources.size ) :
+                raise StopIteration
+                self.current = 0
+                return None 
+            if self.iterator :
+                res = self.iterator.resource()
+
+            else :
+                res = self.resource_set.resources[self.current]
+            
+            return res
         
+        def __iter__(self):
+            return self
 
 
 
