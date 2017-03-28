@@ -313,12 +313,22 @@ class ResourceSet < Resource
     #Calls block once for each element in self, depending on the type of resource.
     #if the type is :resource_set, it is going to iterate over the several resoruce sets defined.
     #:node it is the default type which iterates over all the resources defined in the resource set.
+    #
+    # ********************************
+    #  deprecated 
+    #  ********************************
+    #   
+    #def each( self,type = None, block=None ):
+    #     it = ResourceSetIterator(self, type)
+    #     while it.resource() :
+    #         block( it.resource() )
+    #         it.next()
+    #         
+    #         ************************************
+            
     def each( self,type = None, block=None ):
-        it = ResourceSetIterator(self, type)
-        while it.resource() :
-            block( it.resource() )
-            it.next()
-                
+        for resource in ResourceSetIterator(self, type):
+            block( resource )            
         
     """TODO !!! """
     # Returns the number of resources in the ResourceSet
@@ -353,42 +363,40 @@ class ResourceSet < Resource
     #   all[0]  return just one resource.
     def __getitem__( self,index ):
         count=0
-        resource_set = ResourceSet::new
-        it = ResourceSetIterator::new(self,:node)
-        if isinstance(index,list) :
-                self.each(:node){ |node|
-            resource=it.resource
-            if resource :
-                if (count >= index.first ) and (count <= index.max) :
-                                        resource_set.resources.push( resource )
-                                
-                        
+        resource_set = ResourceSet()
+        it = ResourceSetIterator(self,"node")
+        if isinstance(index,list) : #Range
+            for node in ResourceSetIterator(self,"node") :
+                resource=it.resource
+                if resource :
+                    if (count >= index[0] ) and (count <= index.max) :
+                        resource_set.resources.apppend( resource )
                         count+=1
-                        it.next
-                }
-        resource_set.properties=self.properties.clone
-                return resource_set
+                        it.next()
+            resource_set.properties=self.properties.clone
+            return resource_set
+            
+
+            
       
-          if index.kind_of?(String) :
-          it = ResourceSetIterator::new(self,:resource_set)
-            self.each(:resource_set) { |resource_set|
-                  if resource_set.properties[:alias] == index :
-                    return resource_set
-                  
-            }
-         
+        if isinstance(index,str) :
+            it = ResourceSetIterator(self,"resource_set")
+            for resource in ResourceSetIterator(self,"resource_set") :
+                if resource.properties["alias"] == index :
+                    return resource
+
           #For this case a number is passed and we return a resource Object
-              self.each(:node){ |resource|
-           resource=it.resource
+              
+        
+        #TODO vérifié la cohénrence de ce code il est bizarre 
+        for resource in ResourceSetIterator(self,"node")
+            resource = it.resource()
                if resource :
                     if count==index :
-               #resource_set.resources.push( resource )
-                           return resource
-                    
-           
-                   count+=1
-           it.next
-              }
+                    #resource_set.resources.push( resource )
+                       return resource
+                    count+=1
+            it.next()
         
     
 
