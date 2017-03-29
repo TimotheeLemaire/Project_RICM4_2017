@@ -126,138 +126,138 @@ classe resourceSet  :
 
 ***********************************"""
 class ResourceSet < Resource
-        #attr_accessor :resources
-        
-        def __init__(self, name = None ):
-                super( self.resource_set, None, name )
-                self.resources = []
-                self.resource_files = dict()
+    #attr_accessor :resources
+    
+    def __init__(self, name = None ):
+            super( self.resource_set, None, name )
+            self.resources = []
+            self.resource_files = dict()
         
 
     #Creates a copy of the ResourceSet Object
-        def copy(self):
-                result = ResourceSet()
-                result.properties = self.properties 
-                for resource in self.resources :
-                    result.resources.append(copy.deepcopy(ressource))
+    def copy(self):
+            result = ResourceSet()
+            result.properties = self.properties 
+            for resource in self.resources :
+                result.resources.append(copy.deepcopy(resource))
 
-                return result
+            return result
         
 
     #Add a Resource object to the ResourceSet
     #//on devrait peut être le renommer en append ? 
-        def append(self, resource ):
-          self.resources.append( resource )
-          return self
+    def append(self, resource ):
+      self.resources.append( resource )
+      return self
         
 
     # Return the first element which is an object of the Resource Class
-        def first (self, type=None ):
-            for resource in self.resources:
-                if (resource.type == type) :
-                    return resource
-                elif types(resource) == ResourceSet :
-                    res = resource.first( type )
-                    if (res) :
-                        return res 
-                elif (not type) :
-                    return resource
-            return None
+    def first (self, type=None ):
+        for resource in self.resources:
+            if (resource.type == type) :
+                return resource
+            elif types(resource) == ResourceSet :
+                res = resource.first( type )
+                if (res) :
+                    return res 
+            elif (not type) :
+                return resource
+        return None
         
 
-        def select_resource(self, props ):
-            for resource in self.resources:
-                if resource.corresponds( props ) :
-                    return resource
+    def select_resource(self, props ):
+        for resource in self.resources:
+            if resource.corresponds( props ) :
+                return resource
 
 
-        def select(self, type=None, props=None , block=None):
-            set = ResourceSet()
-            if not block :
-                set.properties = self.properties 
-                for resource in resources :
-                    if not type or resource.type == type :
-                        if resource.corresponds( props ) :
-                            set.resources.append( resource.copy )
-                                
-                        elif type != :resource_set and resource,ResourceSet) :
-                                set.resources.append( resource.select( type, props ) )
-                
-            else :
-                set.properties = self.properties 
-                for resource in resources :
-                    if not type or resource.type == type :
-                        if block( resource ) :
-                            set.resources.append( resource.copy )
+    def select(self, type=None, props=None , block=None):
+        set = ResourceSet()
+        if not block :
+            set.properties = self.properties 
+            for resource in resources :
+                if not type or resource.type == type :
+                    if resource.corresponds( props ) :
+                        set.resources.append( resource.copy() )
                             
-                    elif type != resource_set and isinstance(resource,ResourceSet) :
-                            set.resources.append( resource.select( type, props , block) )
-            return set
+                    elif type != :resource_set and resource,ResourceSet :
+                            set.resources.append( resource.select( type, props ) )
+            
+        else :
+            set.properties = self.properties 
+            for resource in resources :
+                if not type or resource.type == type :
+                    if block( resource ) :
+                        set.resources.append( resource.copy() )
+                        
+                elif type != resource_set and isinstance(resource,ResourceSet) :
+                        set.resources.append( resource.select( type, props , block) )
+        return set
     
 
-        def delete_first(self,resource):
+    def delete_first(self,resource):
+        for i in range(len(self.resources)) :
+            if self.resources[i] == resource :
+                self.resources.pop(i)
+                return resource
+            elif isistance(self.resources[i],ResourceSet) :
+                if self.resources[i].delete_first( resource ) :
+                    return resource
+        return None
+        
+
+    def delete_first_if(self,block=None):
+            for i in range(len(self.resources)) :
+                if block(self.resources[i]) :
+                    return self.resources.pop(i)
+                elif isistance(self.resources[i],ResourceSet) :
+                    if (res = self.resources[i].delete_first_if( block )) :
+                        return res
+            return None
+        
+    #del ? __del__
+    def delate(self,resource):
+            res = None
             for i in range(len(self.resources)) :
                 if self.resources[i] == resource :
                     self.resources.pop(i)
-                    return resource
-                elif isistance(self.resources[i],ResourceSet) :
-                    if self.resources[i].delete_first( resource ) :
-                        return resource
-            return None
-        
-
-        def delete_first_if(self,block=None):
-                for i in range(len(self.resources)) :
-                    if block(self.resources[i]) :
-                        return self.resources.pop(i)
-                    elif isistance(self.resources[i],ResourceSet) :
-                        if (res = self.resources[i].delete_first_if( block )) :
-                            return res
-                return None
-        
-        #del ? __del__
-        def delete(self,resource):
-                res = None
-                for i in range(len(self.resources)) :
-                    if self.resources[i] == resource :
-                        self.resources.pop(i)
-                        res = resource
-                    elif isinstance(self.resources[i],ResourceSet) :
-                        #if self.resources[i].delete_all( resource ) :
-                        if self.resources[i].delete( resource ) :
-                            res = resource
-                return res
-        
-
-        def delete_if(self,block=None):
-            for i in range(len(self.resources)) :
-                if block(self.resources[i]) :
-                    self.resources.pop(i)
+                    res = resource
                 elif isinstance(self.resources[i],ResourceSet) :
-                    self.resources[i].delete_if( block )
-            return self
+                    #if self.resources[i].delete_all( resource ) :
+                    if self.resources[i].delete( resource ) :
+                        res = resource
+            return res
+        
+
+    def delete_if(self,block=None):
+        for i in range(len(self.resources)) :
+            if block(self.resources[i]) :
+                self.resources.pop(i)
+            elif isinstance(self.resources[i],ResourceSet) :
+                self.resources[i].delete_if( block )
+        return self
         
 
     #Puts all the resource hierarchy into one ResourceSet.
     #The type can be either :node or :resource_set.
-        def flatten(self, type = None ):
-            set = ResourceSet()
-            for resource in self.resources:
-                if not type or resource.type == type :
-                    set.resources.append( resource.copy )
-                    if isinstance(resource,ResourceSet) :
-                        del set.resources[-1].resources[:]
+    def flatten(self, type = None ):
+        set = ResourceSet()
+        for resource in self.resources:
+            if not type or resource.type == type :
+                set.resources.append( resource.copy() )
                 if isinstance(resource,ResourceSet) :
-                    set.resources.extend( resource.flatten(type).resources )
-            return set
-        
+                    del set.resources[-1].resources[:]
+            if isinstance(resource,ResourceSet) :
+                set.resources.extend( resource.flatten(type).resources )
+        return set
+    
 
-        # def flatten! (self,type = None ):
-        def flatten_not (self,type = None ):
-            set = self.flatten(type)
-            self.resources = set.resources 
-            return self
-        
+    # def flatten! (self,type = None ):
+    def flatten_not (self,type = None ):
+        set = self.flatten(type)
+        self.resources = set.resources 
+        return self
+    
 
 
         # alias all flatten
@@ -298,16 +298,16 @@ class ResourceSet < Resource
         
 
     #Invokes the block for each set of power of two resources.
-        def each_slice_power2(self, type = None, block=None ):
-            self.each_slice( type, lambda i :  i*i , block )
+    def each_slice_power2(self, type = None, block=None ):
+        self.each_slice( type, lambda i :  i*i , block )
         
 
     def each_slice_double( self,type = None, block=None ):
         self.each_slice( type, lambda i :  2**i , block )
     
-        ## Fix Me  is the type really important , or were are going to deal always with nodes
-        def each_slice_array( self,slices=1, block=None):
-          self.each_slice( None,slices, block)
+    ## Fix Me  is the type really important , or were are going to deal always with nodes
+    def each_slice_array( self,slices=1, block=None):
+        self.each_slice( None,slices, block)
         
 
     #Calls block once for each element in self, depending on the type of resource.
@@ -341,7 +341,7 @@ class ResourceSet < Resource
 """
  # |      x.__getattribute__('name') <==> x.name
         #__getattribute('resource')
-    def lentgth(self):
+    def __len__(self):
         count = 0 
         it = ResourceSetIterator(self, "node")
         while it.resource() :
@@ -367,13 +367,13 @@ class ResourceSet < Resource
         it = ResourceSetIterator(self,"node")
         if isinstance(index,list) : #Range
             for node in ResourceSetIterator(self,"node") :
-                resource=it.resource
+                resource=it.resource()
                 if resource :
                     if (count >= index[0] ) and (count <= index.max) :
                         resource_set.resources.apppend( resource )
                         count+=1
                         it.next()
-            resource_set.properties=self.properties.clone
+            resource_set.properties=copy.deepcopy(self.properties)
             return resource_set
             
 
@@ -403,79 +403,76 @@ class ResourceSet < Resource
     # Returns a resouce or an array of resources.
     # self.return [Resource] a resource or array of resources
     def to_resource(self)  :
-        if self.length() == 1 :
-            
-
-
-            self.each("node"){ |resource|
+        if len(self) == 1 :
+            #la boucle est pas néessaire mais cela est simmilaire au ruby vec un each
+            for resource in ResourceSetIterator(self,"node"):
                 return resource
-            }
         else :
-            resource_alist= [] 
-            self.each("node"){ 
-                resource_array.append( resource )
-                }
-            return resource_array
+            resource_list = []
+            for resource in ResourceSetIterator(self,"node"):
+                resource_list.append( resource )
+            return resource_list
         
     
-
-        def __eq__( set ):
-                super and self.resources == set.resources
+    #todo vérifier le super() 
+    def __eq__(self, set ):
+        super().__eq__() and self.resources == set.resources
         
 
     #Equality between to resoruce sets.
-        def eql( set ) :
-                super and self.resources == set.resources
-        
+    def eql( self, set ) :
+        super().__eq__() and self.resources == set.resources
+    
 
     # Returns a ResourceSet with unique elements.
     # self.return [ResourceSet]     with unique elements
-        def uniq():
-                set = self.copy
-                return set.uniq!
-        
+    def uniq(self):
+        # set = copy.deepcopy(self)
+        set = self.copy()
+        return set.uniq_aux()
+    
 
-        def uniq!
-          i = 0
-          while i < self.resources.size-1 do
+    def uniq_aux(self):
+        i = 0
+        # while i < len(self.resources) -1 :
+        for i in range(len(self.resources) -1)
             pos = []
-              for j in i+1...self.resources.size
-                                      if self.resources[i].eql?(self.resources[j]) :
-                pos.append(j)
-                                      
-                              
-            pos.reverse.each { |p|
-                                      self.resources.delete_at(p)
-            }
-            i = i + 1 
+            for j in range(i+1,len(self.resources)):
+                if self.resources[i].eql(self.resources[j]) :
+                    pos.append(j)
                       
-                      self.resources.each { |x|
-                              if x.instance_of?(ResourceSet) :
-                                      x.uniq!
-                              
-                      }
-                      return self
+            for p in reversed(l):
+                del (self.resources[p])
+            
+            # i += 1 
+
+        for resource in self.resources :
+            if isinstance(resource, resourceSet):
+                resource.uniq_aux()
+ 
+        return self
         
 
-    # Generates and return the path of the file which contains the list of the tipe of resource
+    # Generates and return the path of the file which contains the list of the type of resource
     #specify by the argument type.
-        def resource_file( type=None, update=false )
-            if ( not self.resource_files[type] ) or update :
-                    self.resource_files[type] = Tempfile("#{type}")
-                    resource_set = self.flatten(type)
-                    resource_set.each { |resource|
-                            self.resource_files[type].puts( resource.properties[:name] )
-                    }
-                    self.resource_files[type].close
-                    File.chmod(0644, self.resource_files[type].path)
-            
-            return self.resource_files[type].path
+    def resource_file( type=None, update=False ) :
+        if (( not self.resource_files[type] ) or update) :
+
+                self.resource_files[type] = Tempfile("#{type}")
+                resource_set = self.flatten(type)
+                resource_set.each { |resource|
+                        self.resource_files[type].puts( resource.properties[:name] )
+                }( not self.resource_files(type) ) or update
+                self.resource_files[type].close
+                File.chmod(0644, self.resource_files[type].path)
+        
+        return self.resource_files[type].path
         
 
     #Generates and return the path of the file which contains the list  of the nodes' hostnames. Sometimes it is handy to have it.
     #eg. Use it with mpi.    
     def node_file( update=false ):
-            resource_file( "node", update )
+        resource_file( "node", update )
         
 
     #alias nodefile node_file
@@ -517,59 +514,59 @@ class ResourceSet < Resource
     #Creates the taktuk command to execute on the ResourceSet
     #It takes into account if the resources are grouped under
     #different gatways in order to perform this execution more
-        #efficiently.
-        def make_taktuk_command(self)
-                str_cmd = ""
-                #pd : séparation resource set/noeuds
-                if self.gw != "localhost" :
-                        sets = false
-                  sets_cmd = ""
-                        self.resources.each { |x|
-                                if x.instance_of?(ResourceSet) :
-                                        sets = true
-                                        sets_cmd += x.make_taktuk_command(cmd)
-                                
-                        }
-                        str_cmd += " -m #{self.gw} -[ " + sets_cmd + " -]" if sets
-                        nodes = false
-                        nodes_cmd = ""
-                        self.resources.each { |x|
-                                if x.type == :node :
-                                        nodes = true
-                                        nodes_cmd += x.make_taktuk_command(cmd)
-                                
-                        }
-                  str_cmd += " -l #{self.gw_ssh_user} -m #{self.gw} -[ -l #{self.ssh_user} " + nodes_cmd + " downcast exec [ #{cmd} ] -]" if nodes
-                else :
-                        nodes = false
-                        nodes_cmd = ""
-                        first = ""
-                        self.resources.each { |x|
-                                if x.type == :node :
-                                        first = x.name if not nodes
-                                        nodes = true
-                                        nodes_cmd += x.make_taktuk_command(cmd)
-                                
-                        }
-                  puts " results of the command #{nodes_cmd}"
-                  str_cmd += " -l #{self.gw_ssh_user} -m #{first} -[ " + nodes_cmd + " downcast exec [ #{cmd} ] -]" if nodes
-                        sets = false
-                        sets_cmd = ""
-                        self.resources.each { |x|
-                                if x.instance_of?(ResourceSet) :
-                                        sets = true
-                                        sets_cmd += x.make_taktuk_command(cmd)
-                                
-                        }
-                        if sets :
-                                if nodes : 
-                                        str_cmd += " -m #{first} -[ " + sets_cmd + " -]"
-                                else
-                                        str_cmd += sets_cmd
-                                
-                        
-                
-                return str_cmd
+    #efficiently.
+    def make_taktuk_command(self)
+            str_cmd = ""
+            #pd : séparation resource set/noeuds
+            if self.gw != "localhost" :
+                    sets = false
+              sets_cmd = ""
+                    self.resources.each { |x|
+                            if x.instance_of?(ResourceSet) :
+                                    sets = true
+                                    sets_cmd += x.make_taktuk_command(cmd)
+                            
+                    }
+                    str_cmd += " -m #{self.gw} -[ " + sets_cmd + " -]" if sets
+                    nodes = false
+                    nodes_cmd = ""
+                    self.resources.each { |x|
+                            if x.type == :node :
+                                    nodes = true
+                                    nodes_cmd += x.make_taktuk_command(cmd)
+                            
+                    }
+              str_cmd += " -l #{self.gw_ssh_user} -m #{self.gw} -[ -l #{self.ssh_user} " + nodes_cmd + " downcast exec [ #{cmd} ] -]" if nodes
+            else :
+                    nodes = false
+                    nodes_cmd = ""
+                    first = ""
+                    self.resources.each { |x|
+                            if x.type == :node :
+                                    first = x.name if not nodes
+                                    nodes = true
+                                    nodes_cmd += x.make_taktuk_command(cmd)
+                            
+                    }
+              puts " results of the command #{nodes_cmd}"
+              str_cmd += " -l #{self.gw_ssh_user} -m #{first} -[ " + nodes_cmd + " downcast exec [ #{cmd} ] -]" if nodes
+                    sets = false
+                    sets_cmd = ""
+                    self.resources.each { |x|
+                            if x.instance_of?(ResourceSet) :
+                                    sets = true
+                                    sets_cmd += x.make_taktuk_command(cmd)
+                            
+                    }
+                    if sets :
+                            if nodes : 
+                                    str_cmd += " -m #{first} -[ " + sets_cmd + " -]"
+                            else
+                                    str_cmd += sets_cmd
+                            
+                    
+            
+            return str_cmd
         
 
 
