@@ -33,6 +33,10 @@ class Resource():
     def name(self) :
         return self.properties["name"]
 
+    #Returns the name of the resource.
+    def __str__(self) :
+        return self.properties["name"]        
+
     #Sets the name of the resource.
     def name_equal(self,name):
         self.properties["name"] = name
@@ -45,9 +49,6 @@ class Resource():
     
     def gw_ssh_user(self):
         return self.properties["gw_ssh_user"]
-    
-    #Returns the name of the resource.
-    __str__ = name
     
 
     def corresponds(self, props ):
@@ -111,7 +112,6 @@ class Resource():
     def make_taktuk_command(cmd) :
         return " -m #{self.name}"
     
-
 
 
 #class ResourceSetIterator
