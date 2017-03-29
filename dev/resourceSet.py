@@ -280,8 +280,8 @@ class ResourceSet(Resource):
                 number += slice_step
             if (number == 0):
                 return None 
-            for j in 1..number do
-                    resource = it.resource
+            for j in range(1,number) :
+                    resource = it.resource()
                     if resource :
                             resource_set.resources.append( resource )
                     else :
@@ -386,14 +386,15 @@ class ResourceSet(Resource):
               
         
         #TODO vérifié la cohénrence de ce code il est bizarre 
-        for resource in ResourceSetIterator(self,"node")
-            resource = it.resource()
-               if resource :
-                    if count==index :
-                    #resource_set.resources.push( resource )
-                       return resource
-                    count+=1
-            it.next()
+        for resource in ResourceSetIterator(self,"node"): 
+            #resource = it.resource()
+            #if resource :
+            if count==index :
+                #resource_set.resources.push( resource )
+                return resource
+            count+=1
+            #it.next()
+        return 
         
     
 
@@ -432,7 +433,7 @@ class ResourceSet(Resource):
     def uniq_aux(self):
         i = 0
         # while i < len(self.resources) -1 :
-        for i in range(len(self.resources) -1)
+        for i in range(len(self.resources) -1):
             pos = []
             for j in range(i+1,len(self.resources)):
                 if self.resources[i].eql(self.resources[j]) :
@@ -458,7 +459,7 @@ class ResourceSet(Resource):
                 self.resource_files[type] = Tempfile("#{type}")
                 resource_set = self.flatten(type)
                 resource_set.each { |resource|
-                        self.resource_files[type].puts( resource.properties[:name] )
+                        self.resource_files[type].puts( resource.properties["name"] )
                 }( not self.resource_files(type) ) or update
                 self.resource_files[type].close
                 File.chmod(0644, self.resource_files[type].path)
@@ -468,7 +469,7 @@ class ResourceSet(Resource):
 
     #Generates and return the path of the file which contains the list  of the nodes' hostnames. Sometimes it is handy to have it.
     #eg. Use it with mpi.    
-    def node_file( update=false ):
+    def node_file( update=False ):
         resource_file( "node", update )
         
 
