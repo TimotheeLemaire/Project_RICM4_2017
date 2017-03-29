@@ -121,7 +121,7 @@ classe resourceSet  :
     
 
 ***********************************"""
-class ResourceSet < Resource
+class ResourceSet(Resource):
     #attr_accessor :resources
     
     def __init__(self, name = None ):
@@ -141,7 +141,7 @@ class ResourceSet < Resource
         
 
     #Add a Resource object to the ResourceSet
-    #//on devrait peut être le renommer en append ? 
+    #On devrait peut etre le renommer en append ?
     def append(self, resource ):
       self.resources.append( resource )
       return self
@@ -176,7 +176,7 @@ class ResourceSet < Resource
                     if resource.corresponds( props ) :
                         set.resources.append( resource.copy() )
                             
-                    elif type != :resource_set and resource,ResourceSet :
+                    elif type != resource_set and resource.ResourceSet :
                             set.resources.append( resource.select( type, props ) )
             
         else :
@@ -207,7 +207,7 @@ class ResourceSet < Resource
                 if block(self.resources[i]) :
                     return self.resources.pop(i)
                 elif isistance(self.resources[i],ResourceSet) :
-                    if (res = self.resources[i].delete_first_if( block )) :
+                    if (res == self.resources[i].delete_first_if( block )) :
                         return res
             return None
         
@@ -276,9 +276,10 @@ class ResourceSet < Resource
 
             elif isinstance(slice_step,list) :
                 number = slice_step.shift.to_i
-                else :
-                    number += slice_step
-            return None if number == 0
+            else :
+                number += slice_step
+            if (number == 0):
+                return None 
             for j in 1..number do
                     resource = it.resource
                     if resource :

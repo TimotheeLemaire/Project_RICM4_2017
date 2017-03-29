@@ -12,8 +12,10 @@ def test_resource():
 
 	with open('resource_set2.yaml', 'r') as f:
 		res = yaml.load(f)
-		r = ressourceSet.Resource(res["type"],res["properties"],res["properties"]["name"])
-	#print(res)
-	print(str(r))
+		r = ressourceSet.ResourceSet(res["type"],res["properties"],res["properties"]["name"])
+
+	r1 = resource.select()
+
+def test_flatten
 
 test_resource()
