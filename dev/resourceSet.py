@@ -110,7 +110,7 @@ class Resource():
     #Use to make the list of machines for
     #the taktuk command
     def make_taktuk_command(cmd) :
-        return " -m #{self.name}"
+        return " -m " +self.name()"
     
 
 
