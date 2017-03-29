@@ -280,7 +280,7 @@ class ResourceSet(Resource):
                 number += slice_step
             if (number == 0):
                 return None 
-            for j in 1..number do
+            for j in range(1,number) :
                     resource = it.resource
                     if resource :
                             resource_set.resources.append( resource )
@@ -333,10 +333,10 @@ class ResourceSet(Resource):
     """
     def length(self):
         count=0
-        self.each("node",lambda count : count+=1) # impossible d'incrémenter en fonction lambda
+        self.each("node",lambda count : count+=1) # impossible d'incrementer en fonction lambda
         return count
-"""
- # |      x.__getattribute__('name') <==> x.name
+    """
+# |      x.__getattribute__('name') <==> x.name
         #__getattribute('resource')
     def __len__(self):
         count = 0 
@@ -385,14 +385,14 @@ class ResourceSet(Resource):
           #For this case a number is passed and we return a resource Object
               
         
-        #TODO vérifié la cohénrence de ce code il est bizarre 
-        for resource in ResourceSetIterator(self,"node")
+        #TODO verifie la cohenrence de ce code il est bizarre 
+        for resource in ResourceSetIterator(self,"node") :
             resource = it.resource()
-               if resource :
-                    if count==index :
-                    #resource_set.resources.push( resource )
-                       return resource
-                    count+=1
+            if resource :
+                if count==index :
+                #resource_set.resources.push( resource )
+                    return resource
+                count+=1
             it.next()
         
     
@@ -401,7 +401,7 @@ class ResourceSet(Resource):
     # self.return [Resource] a resource or array of resources
     def to_resource(self)  :
         if len(self) == 1 :
-            #la boucle est pas néessaire mais cela est simmilaire au ruby vec un each
+            #la boucle est pas necessaire mais cela est simmilaire au ruby vec un each
             for resource in ResourceSetIterator(self,"node"):
                 return resource
         else :
@@ -411,7 +411,7 @@ class ResourceSet(Resource):
             return resource_list
         
     
-    #todo vérifier le super() 
+    #todo verifier le super() 
     def __eq__(self, set ):
         super().__eq__() and self.resources == set.resources
         
@@ -432,7 +432,7 @@ class ResourceSet(Resource):
     def uniq_aux(self):
         i = 0
         # while i < len(self.resources) -1 :
-        for i in range(len(self.resources) -1)
+        for i in range(len(self.resources) -1):
             pos = []
             for j in range(i+1,len(self.resources)):
                 if self.resources[i].eql(self.resources[j]) :
@@ -452,18 +452,18 @@ class ResourceSet(Resource):
 
     # Generates and return the path of the file which contains the list of the type of resource
     #specify by the argument type.
-    def resource_file( type=None, update=False ) :
-        if (( not self.resource_files[type] ) or update) :
+    # def resource_file( type=None, update=False ) :
+    #     if (( not self.resource_files[type] ) or update) :
 
-                self.resource_files[type] = Tempfile("#{type}")
-                resource_set = self.flatten(type)
-                resource_set.each { |resource|
-                        self.resource_files[type].puts( resource.properties[:name] )
-                }( not self.resource_files(type) ) or update
-                self.resource_files[type].close
-                File.chmod(0644, self.resource_files[type].path)
+    #             self.resource_files[type] = Tempfile("#{type}")
+    #             resource_set = self.flatten(type)
+    #             resource_set.each { |resource|
+    #                     self.resource_files[type].puts( resource.properties[:name] )
+    #             }( not self.resource_files(type) ) or update
+    #             self.resource_files[type].close
+    #             File.chmod(0644, self.resource_files[type].path)
         
-        return self.resource_files[type].path
+    #     return self.resource_files[type].path
         
 
     #Generates and return the path of the file which contains the list  of the nodes' hostnames. Sometimes it is handy to have it.
@@ -474,109 +474,109 @@ class ResourceSet(Resource):
 
     #alias nodefile node_file
 
-    def gen_keys(type=None )
-        puts "Creating public keys for cluster ssh comunication"
-        resource_set = self.uniq.flatten(type)
-        resource_set.each { |resource|
-            cmd = "scp "
-            cmd += "-r ~/.ssh/ "
-            ### here we have to deal with the user ## we have to define one way to put the user.
-            cmd += " rootself.#{resource.properties[:name]}:~"
-            command_result = $client.asynchronous_command(cmd)
-            $client.command_wait(command_result["command_number"],1)
-            result = $client.command_result(command_result["command_number"])
-            puts cmd
-            puts result["stdout"]
-            puts result["stderr"]
-        }
+    # def gen_keys(type=None ):
+    #     puts "Creating public keys for cluster ssh comunication"
+    #     resource_set = self.uniq.flatten(type)
+    #     resource_set.each { |resource|
+    #         cmd = "scp "
+    #         cmd += "-r ~/.ssh/ "
+    #         ### here we have to deal with the user ## we have to define one way to put the user.
+    #         cmd += " rootself.#{resource.properties[:name]}:~"
+    #         command_result = $client.asynchronous_command(cmd)
+    #         $client.command_wait(command_result["command_number"],1)
+    #         result = $client.command_result(command_result["command_number"])
+    #         puts cmd
+    #         puts result["stdout"]
+    #         puts result["stderr"]
+    #     }
     
     #Generates a directory.xml file for using as a resources 
     #For Gush.
-    def make_gush_file( update = false)
-        gush_file = File("directory.xml","w+")
-        gush_file.puts("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
-        gush_file.puts("<gush>")
-        resource_set = self.flatten(:node)
-        resource_set.each{ |resource|
-            gush_file.puts( "<resource_manager type=\"ssh\">")
-            gush_file.puts("<node hostname=\"#{resource.properties[:name]}:15400\" user=\"lig_expe\" group=\"local\" />" )
+    # def make_gush_file( update = false):
+    #     gush_file = File("directory.xml","w+")
+    #     gush_file.puts("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
+    #     gush_file.puts("<gush>")
+    #     resource_set = self.flatten(:node)
+    #     resource_set.each{ |resource|
+    #         gush_file.puts( "<resource_manager type=\"ssh\">")
+    #         gush_file.puts("<node hostname=\"#{resource.properties[:name]}:15400\" user=\"lig_expe\" group=\"local\" />" )
 
-            gush_file.puts("</resource_manager>")
-        }
-        gush_file.puts("</gush>")
-        gush_file.close
-        return gush_file.path
+    #         gush_file.puts("</resource_manager>")
+    #     }
+    #     gush_file.puts("</gush>")
+    #     gush_file.close
+    #     return gush_file.path
     
 
     #Creates the taktuk command to execute on the ResourceSet
     #It takes into account if the resources are grouped under
     #different gatways in order to perform this execution more
     #efficiently.
-    def make_taktuk_command(self)
-            str_cmd = ""
-            #pd : séparation resource set/noeuds
-            if self.gw != "localhost" :
-                    sets = false
-              sets_cmd = ""
-                    self.resources.each { |x|
-                            if x.instance_of?(ResourceSet) :
-                                    sets = true
-                                    sets_cmd += x.make_taktuk_command(cmd)
+    # def make_taktuk_command(self)
+    #         str_cmd = ""
+    #         #pd : separation resource set/noeuds
+    #         if self.gw != "localhost" :
+    #                 sets = false
+    #           sets_cmd = ""
+    #                 self.resources.each { |x|
+    #                         if x.instance_of?(ResourceSet) :
+    #                                 sets = true
+    #                                 sets_cmd += x.make_taktuk_command(cmd)
                             
-                    }
-                    str_cmd += " -m #{self.gw} -[ " + sets_cmd + " -]" if sets
-                    nodes = false
-                    nodes_cmd = ""
-                    self.resources.each { |x|
-                            if x.type == :node :
-                                    nodes = true
-                                    nodes_cmd += x.make_taktuk_command(cmd)
+    #                 }
+    #                 str_cmd += " -m #{self.gw} -[ " + sets_cmd + " -]" if sets
+    #                 nodes = false
+    #                 nodes_cmd = ""
+    #                 self.resources.each { |x|
+    #                         if x.type == :node :
+    #                                 nodes = true
+    #                                 nodes_cmd += x.make_taktuk_command(cmd)
                             
-                    }
-              str_cmd += " -l #{self.gw_ssh_user} -m #{self.gw} -[ -l #{self.ssh_user} " + nodes_cmd + " downcast exec [ #{cmd} ] -]" if nodes
-            else :
-                    nodes = false
-                    nodes_cmd = ""
-                    first = ""
-                    self.resources.each { |x|
-                            if x.type == :node :
-                                    first = x.name if not nodes
-                                    nodes = true
-                                    nodes_cmd += x.make_taktuk_command(cmd)
+    #                 }
+    #           str_cmd += " -l #{self.gw_ssh_user} -m #{self.gw} -[ -l #{self.ssh_user} " + nodes_cmd + " downcast exec [ #{cmd} ] -]" if nodes
+    #         else :
+    #                 nodes = false
+    #                 nodes_cmd = ""
+    #                 first = ""
+    #                 self.resources.each { |x|
+    #                         if x.type == :node :
+    #                                 first = x.name if not nodes
+    #                                 nodes = true
+    #                                 nodes_cmd += x.make_taktuk_command(cmd)
                             
-                    }
-              puts " results of the command #{nodes_cmd}"
-              str_cmd += " -l #{self.gw_ssh_user} -m #{first} -[ " + nodes_cmd + " downcast exec [ #{cmd} ] -]" if nodes
-                    sets = false
-                    sets_cmd = ""
-                    self.resources.each { |x|
-                            if x.instance_of?(ResourceSet) :
-                                    sets = true
-                                    sets_cmd += x.make_taktuk_command(cmd)
+    #                 }
+    #           puts " results of the command #{nodes_cmd}"
+    #           str_cmd += " -l #{self.gw_ssh_user} -m #{first} -[ " + nodes_cmd + " downcast exec [ #{cmd} ] -]" if nodes
+    #                 sets = false
+    #                 sets_cmd = ""
+    #                 self.resources.each { |x|
+    #                         if x.instance_of?(ResourceSet) :
+    #                                 sets = true
+    #                                 sets_cmd += x.make_taktuk_command(cmd)
                             
-                    }
-                    if sets :
-                            if nodes : 
-                                    str_cmd += " -m #{first} -[ " + sets_cmd + " -]"
-                            else
-                                    str_cmd += sets_cmd
+    #                 }
+    #                 if sets :
+    #                         if nodes : 
+    #                                 str_cmd += " -m #{first} -[ " + sets_cmd + " -]"
+    #                         else
+    #                                 str_cmd += sets_cmd
                             
                     
             
-            return str_cmd
+    #         return str_cmd
         
 
 
 
 class ResourceSetIterator:
-        #current : élement courant 
+        #current : element courant 
         #iterator : resource set pour parcourir les resource_set 
         #resource_set: la resource initale 
         #type : le type de la resource initiale
         #
         #
         #attr_accessor :current, :iterator, :resource_set, :type
-        def initialize(self, resource_set, type=None)
+        def initialize(self, resource_set, type=None):
                 self.resource_set = resource_set
                 self.iterator = None
                 self.type = type
@@ -591,7 +591,7 @@ class ResourceSetIterator:
                         if self.iterator.resource :
                             self.current = i
                             return
-                        else
+                        else :
                             self.iterator = None
                                 
                     elif not self.type :
