@@ -1,0 +1,15 @@
+---
+properties: 
+  name: toto
+resources: 
+  properties:
+    name: titi
+  type: :node
+  properties: 
+    name: tata
+  resources: 
+    properties: 
+      name: tutu
+    type: node
+  type: resource_set
+type: resource_set

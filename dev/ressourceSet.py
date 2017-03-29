@@ -3,38 +3,37 @@ import copy
 #A Resource maps a computational resource to an object which keeps 
 #Certains characteritics such as type, name, gateway.
 class Resource():
-	"""docstring for Resource"""
-	# self.Type #type of the resource
-	# self.properties #properties of the resources
+    """docstring for Resource"""
+    # self.Type #type of the resource
+    # self.properties #properties of the resources
 
 
     # Creates a new Resource Object.
     # self.param [type] type of the source
     # self.param [properties] object property
     # self.param [String] String name
-	# self.return [resource] Resource Object
-	def __init__(self,typ, prop=None , name = None):
-		self.type = typ #type of the resource
-		self.properties = dict()  #properties of the resources
+    # self.return [resource] Resource Object
+    def __init__(self,typ, prop=None , name = None):
+        self.type = typ #type of the resource
+        self.properties = dict()  #properties of the resources
 
-		if prop: #test si prop est vide 
-			#----replaces the contents of self.properties hash with
+        if prop : #test si prop est vide 
+            #----replaces the contents of self.properties hash with
             #----contents of 'properties' hash
-        	self.properties = prop  
+            self.properties = prop
 
-		if name :
-			self.properties["name"] = name 
+        if name :
+            self.properties["name"] = name 
 
  #     __getattribute__(...)
  # |      x.__getattribute__('name') <==> x.name
 
-	# Return the name of the resource.
-	# self.return [String] the name of the resource
+    # Return the name of the resource.
+    # self.return [String] the name of the resource
     def name(self) :
         return self.properties["name"]
-    
 
-	#Sets the name of the resource.
+    #Sets the name of the resource.
     def name_equal(self,name):
         self.properties["name"] = name
         return self
@@ -45,11 +44,10 @@ class Resource():
     
     
     def gw_ssh_user(self):
-    	return self.properties["gw_ssh_user"]
+        return self.properties["gw_ssh_user"]
     
-	#Returns the name of the resource.
-    def to_s(self):	
-        return self.properties["name"]
+    #Returns the name of the resource.
+    __str__ = name
     
 
     def corresponds(self, props ):
@@ -87,33 +85,31 @@ class Resource():
         else :
             return False
 
-	#Returns the name of the gateway
-	def gateway(self):
-		if self.properties["gateway"]:
+    #Returns the name of the gateway
+    def gateway(self):
+        if self.properties["gateway"]:
             return self.properties["gateway"] 
-		return "localhost"
-	
+        return "localhost"
+    
 
     def gateway_equal(self,host):
       self.properties["gateway"] = host
       #return self
     
-    	
-	#alias gw gateway
+    #alias gw gateway
+    gw = gateway
+
 
     def job(self):
         if self.properties["id"]:
             return self.properties["id"] 
-      return 0
+        return 0
 
-
-
-
-"""TODO"""
-#Use to make the list of machines for
-#the taktuk command
-    def make_taktuk_command(cmd):
-            return " -m #{self.name}"
+    """TODO"""
+    #Use to make the list of machines for
+    #the taktuk command
+    def make_taktuk_command(cmd) :
+        return " -m #{self.name}"
     
 
 
