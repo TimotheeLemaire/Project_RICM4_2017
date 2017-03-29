@@ -152,7 +152,7 @@ class ResourceSet(Resource):
         for resource in self.resources:
             if (resource.type == type) :
                 return resource
-            elif types(resource) == ResourceSet :
+            elif isinstance(resource,ResourceSet):
                 res = resource.first( type )
                 if (res) :
                     return res 
@@ -171,22 +171,22 @@ class ResourceSet(Resource):
         set = ResourceSet()
         if not block :
             set.properties = self.properties 
-            for resource in resources :
+            for resource in self.resources :
                 if not type or resource.type == type :
                     if resource.corresponds( props ) :
                         set.resources.append( resource.copy() )
                             
-                    elif type != resource_set and resource.ResourceSet :
-                            set.resources.append( resource.select( type, props ) )
+                    elif type != "resource_set" and resource.ResourceSet :
+                        set.resources.append( resource.select( type, props ) )
             
         else :
             set.properties = self.properties 
-            for resource in resources :
+            for resource in self.resources :
                 if not type or resource.type == type :
                     if block( resource ) :
                         set.resources.append( resource.copy() )
                         
-                elif type != resource_set and isinstance(resource,ResourceSet) :
+                elif type != "resource_set" and isinstance(resource,ResourceSet) :
                         set.resources.append( resource.select( type, props , block) )
         return set
     
@@ -196,7 +196,7 @@ class ResourceSet(Resource):
             if self.resources[i] == resource :
                 self.resources.pop(i)
                 return resource
-            elif isistance(self.resources[i],ResourceSet) :
+            elif isinstance(self.resources[i],ResourceSet) :
                 if self.resources[i].delete_first( resource ) :
                     return resource
         return None
@@ -206,8 +206,9 @@ class ResourceSet(Resource):
             for i in range(len(self.resources)) :
                 if block(self.resources[i]) :
                     return self.resources.pop(i)
-                elif isistance(self.resources[i],ResourceSet) :
-                    if (res == self.resources[i].delete_first_if( block )) :
+                elif isinstance(self.resources[i],ResourceSet) :
+                    res = self.resources[i].delete_first_if( block )
+                    if (res) :
                         return res
             return None
         
@@ -438,13 +439,13 @@ class ResourceSet(Resource):
                 if self.resources[i].eql(self.resources[j]) :
                     pos.append(j)
                       
-            for p in reversed(l):
+            for p in reversed(pos):
                 del (self.resources[p])
             
             # i += 1 
 
         for resource in self.resources :
-            if isinstance(resource, resourceSet):
+            if isinstance(resource, ResourceSet):
                 resource.uniq_aux()
  
         return self
@@ -468,8 +469,8 @@ class ResourceSet(Resource):
 
     #Generates and return the path of the file which contains the list  of the nodes' hostnames. Sometimes it is handy to have it.
     #eg. Use it with mpi.    
-    def node_file( update=false ):
-        resource_file( "node", update )
+    #def node_file( update=False ):
+    #    resource_file( "node", update )
         
 
     #alias nodefile node_file
@@ -618,7 +619,8 @@ class ResourceSetIterator:
 
         def next(self):
             res = None
-            self.current += 1 if not self.iterator
+            if not self.iterator :
+                self.current += 1
             while not res and self.current < self.resource_set.resources.size : 
                     if self.iterator :
                             self.iterator.next
@@ -638,7 +640,7 @@ class ResourceSetIterator:
                             
                     elif not self.type :
                             res = self.resource_set.resources[self.current]
-                    else
+                    else:
                             self.current += 1
                     
             if( self.current >= self.resource_set.resources.size ) :
