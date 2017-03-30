@@ -13,6 +13,8 @@ class test2:
 #print(test.x )
 
 
+
+
 a = test()
 b = test2()
 c= test2()
@@ -23,15 +25,27 @@ c= test2()
 #print(c.__class__.__name__)
 
 
-print(a.x)
+#print(a.x)
 tmp = 100 
 a.plop(tmp)
 
-print(a.x) 
+#print(a.x) 
 
 a.x = 12
-print(a.x)
+#print(a.x)
 
-print (c.__class__==b.__class__)
+#print (c.__class__==b.__class__)
+
+def test():
+	try:
+		raise StopIteration
+	except StopIteration :
+		print "yes"
+	finally :
+		print "omg"
+	print "ole"
+		
+test()
+
 
 

@@ -288,7 +288,7 @@ class ResourceSet(Resource):
                 else :
                     return None
                 
-                it.next
+                it.next()
             
             block( resource_set );
             i += 1
@@ -341,13 +341,9 @@ class ResourceSet(Resource):
         #__getattribute('resource')
     def __len__(self):
         count = 0 
-        it = ResourceSetIterator(self, "node")
-        while it.resource() :
-            #block( it.resource )
-            count += 1
-            it.next()
+        for resource in ResourceSetIterator(self, "node"):
+            count +=1
         return count
-    
 
     # Returns a subset of the ResourceSet.
     # self.note It can be used with a range as a parameter.
@@ -619,25 +615,33 @@ class ResourceSetIterator:
                 self.current += 1
             print 'len = ' +  str(len(self.resource_set.resources)) + ' current =' + str(self.current)
             while not res and self.current < len(self.resource_set.resources) : 
-                    print "ici"
+                    # print "ici"
                     if self.iterator :
-                            self.iterator.next()
-                            res = self.iterator.resource()
+                            try :
+                                res =self.iterator.next()
+                            except StopIteration :
+                                self.iterator = None
+                                self.current += 1
+                            #res = self.iterator.resource()
                             self.debut = False
-                            if not res :
-                                    self.iterator = None
-                                    self.current += 1
                             
                     elif self.type == self.resource_set.resources[self.current].type :
                             res = self.resource_set.resources[self.current]
                             self.debut = False
                     elif isinstance(self.resource_set.resources[self.current],ResourceSet) :
                             self.iterator = ResourceSetIterator(self.resource_set.resources[self.current], self.type)
-                            res = self.iterator.resource()
+                            #res = self.iterator.resource()
+                            try :
+                                res =self.iterator.next()
+                            except StopIteration :
+                                self.iterator = None
+                                self.current += 1
+                                
                             self.debut = False
+                            """
                             if not res :
                                     self.iterator = None
-                                    self.current += 1
+                                    self.current += 1"""
                             
                     elif not self.type :
                             res = self.resource_set.resources[self.current]
