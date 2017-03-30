@@ -3,3 +3,8 @@
 mydockerbuild/
 
 expo-master/
+
+
+*.pyc
+
+

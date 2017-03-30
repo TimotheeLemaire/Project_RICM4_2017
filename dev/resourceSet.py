@@ -106,11 +106,11 @@ class Resource(object):
             return self.properties["id"] 
         return 0
 
-    """TODO"""
+
     #Use to make the list of machines for
     #the taktuk command
-    def make_taktuk_command(cmd) :
-        return " -m #{self.name}"
+    def make_taktuk_command(self,cmd) :
+        return " -m " +self.name()
     
 
 
@@ -386,7 +386,7 @@ class ResourceSet(Resource):
           #For this case a number is passed and we return a resource Object
               
         
-        #TODO verifie la cohenrence de ce code il est bizarre 
+        #TODO verifie la validite de ce code il est bizarre 
         for resource in ResourceSetIterator(self,"node"): 
             #resource = it.resource()
             #if resource :
@@ -475,98 +475,87 @@ class ResourceSet(Resource):
     #    resource_file( "node", update )
         
 
+
+
+
     #alias nodefile node_file
 
-    # def gen_keys(type=None ):
-    #     puts "Creating public keys for cluster ssh comunication"
-    #     resource_set = self.uniq.flatten(type)
-    #     resource_set.each { |resource|
-    #         cmd = "scp "
-    #         cmd += "-r ~/.ssh/ "
-    #         ### here we have to deal with the user ## we have to define one way to put the user.
-    #         cmd += " rootself.#{resource.properties[:name]}:~"
-    #         command_result = $client.asynchronous_command(cmd)
-    #         $client.command_wait(command_result["command_number"],1)
-    #         result = $client.command_result(command_result["command_number"])
-    #         puts cmd
-    #         puts result["stdout"]
-    #         puts result["stderr"]
-    #     }
+    #propre à ruby
     
     #Generates a directory.xml file for using as a resources 
     #For Gush.
-    # def make_gush_file( update = false):
-    #     gush_file = File("directory.xml","w+")
-    #     gush_file.puts("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
-    #     gush_file.puts("<gush>")
-    #     resource_set = self.flatten(:node)
-    #     resource_set.each{ |resource|
-    #         gush_file.puts( "<resource_manager type=\"ssh\">")
-    #         gush_file.puts("<node hostname=\"#{resource.properties[:name]}:15400\" user=\"lig_expe\" group=\"local\" />" )
+    def make_gush_file( update = false):
+        gush_file = File("directory.xml","w+")
+        gush_file.puts("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
+        gush_file.puts("<gush>")
+        resource_set = self.flatten(:node)
+        resource_set.each{ |resource|
+            gush_file.puts( "<resource_manager type=\"ssh\">")
+            gush_file.puts("<node hostname=\"#{resource.properties[:name]}:15400\" user=\"lig_expe\" group=\"local\" />" )
 
-    #         gush_file.puts("</resource_manager>")
-    #     }
-    #     gush_file.puts("</gush>")
-    #     gush_file.close
-    #     return gush_file.path
+            gush_file.puts("</resource_manager>")
+        }
+        gush_file.puts("</gush>")
+        gush_file.close
+        return gush_file.path
     
 
     #Creates the taktuk command to execute on the ResourceSet
     #It takes into account if the resources are grouped under
     #different gatways in order to perform this execution more
     #efficiently.
-    # def make_taktuk_command(self)
-    #         str_cmd = ""
-    #         #pd : separation resource set/noeuds
-    #         if self.gw != "localhost" :
-    #                 sets = false
-    #           sets_cmd = ""
-    #                 self.resources.each { |x|
-    #                         if x.instance_of?(ResourceSet) :
-    #                                 sets = true
-    #                                 sets_cmd += x.make_taktuk_command(cmd)
-                            
-    #                 }
-    #                 str_cmd += " -m #{self.gw} -[ " + sets_cmd + " -]" if sets
-    #                 nodes = false
-    #                 nodes_cmd = ""
-    #                 self.resources.each { |x|
-    #                         if x.type == :node :
-    #                                 nodes = true
-    #                                 nodes_cmd += x.make_taktuk_command(cmd)
-                            
-    #                 }
-    #           str_cmd += " -l #{self.gw_ssh_user} -m #{self.gw} -[ -l #{self.ssh_user} " + nodes_cmd + " downcast exec [ #{cmd} ] -]" if nodes
-    #         else :
-    #                 nodes = false
-    #                 nodes_cmd = ""
-    #                 first = ""
-    #                 self.resources.each { |x|
-    #                         if x.type == :node :
-    #                                 first = x.name if not nodes
-    #                                 nodes = true
-    #                                 nodes_cmd += x.make_taktuk_command(cmd)
-                            
-    #                 }
-    #           puts " results of the command #{nodes_cmd}"
-    #           str_cmd += " -l #{self.gw_ssh_user} -m #{first} -[ " + nodes_cmd + " downcast exec [ #{cmd} ] -]" if nodes
-    #                 sets = false
-    #                 sets_cmd = ""
-    #                 self.resources.each { |x|
-    #                         if x.instance_of?(ResourceSet) :
-    #                                 sets = true
-    #                                 sets_cmd += x.make_taktuk_command(cmd)
-                            
-    #                 }
-    #                 if sets :
-    #                         if nodes : 
-    #                                 str_cmd += " -m #{first} -[ " + sets_cmd + " -]"
-    #                         else
-    #                                 str_cmd += sets_cmd
+    def make_taktuk_command(self,cmd):
+            str_cmd = ""
+            #pd : separation resource set/noeuds
+            if self.gw != "localhost" :
+            	sets =False
+              	sets_cmd = ""
+              	for resource in self.resources:
+                   if isinstance(resource,ResourceSet) :
+                       sets = True
+                       
+                   sets_cmd += resource.make_taktuk_command(cmd)
+                if sets :
+                	str_cmd += " -m "+ self.gw() +"-[ " + sets_cmd + " -]" 
+                nodes = False
+                nodes_cmd = ""
+                
+                for resource in self.resources:
+                    if resource.type == "node" :
+                        nodes = True
+                        nodes_cmd += resource.make_taktuk_command(cmd)
+              	if nodes :
+              		str_cmd += " -l "+  self.gw_ssh_user() +" -m "+ self.gw()+" -[ -l "+self.ssh_user()+" " + nodes_cmd + " downcast exec [ "+cmd+" ] -]" 
+            else :
+                nodes = False
+                nodes_cmd = ""
+                first = ""
+                for resource in self.resources :
+                    if resource.type == "node" :
+                        if not nodes :   
+                            first = resource.name 
+                        nodes = True
+                        nodes_cmd += resource.make_taktuk_command(cmd)
+                
+            	print (" results of the command "+nodes_cmd )
+            	if nodes :
+                    str_cmd += " -l "+ self.gw_ssh_user()+" -m "+ first +" -[ " + nodes_cmd + " downcast exec [ "+cmd+" ] -]" 
+                    sets = False
+                    sets_cmd = ""
+
+                    for resource in self.resources :
+                    	if isinstance(resource,ResourceSet) :
+                            sets = True
+                            sets_cmd += resource.make_taktuk_command(cmd)
+                    if sets :
+                            if nodes : 
+                                    str_cmd += " -m "+first + " -[ " + sets_cmd + " -]"
+                            else:
+                                    str_cmd += sets_cmd
                             
                     
             
-    #         return str_cmd
+        	return str_cmd
         
 
 
