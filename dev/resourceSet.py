@@ -52,7 +52,7 @@ class Resource(object):
     
 
     def corresponds(self, props ):
-        for key,value in props:
+        for key,value in props.items():
             if callable(value) :
                 if not value(self.properties[key]):
                     return False
@@ -79,7 +79,7 @@ class Resource(object):
     #Returns true if self and other are the same object.
     def eql( self,res ):
         if self.type == res.type and self.__class__ == res.__class__:
-            for key,value in self.properties:
+            for key,value in self.properties.items():
                 if(res.properties[key] != value):
                     return False 
             return True 
@@ -175,10 +175,8 @@ class ResourceSet(Resource):
                 if not type or resource.type == type :
                     if resource.corresponds( props ) :
                         set.resources.append( resource.copy() )
-                            
-                    elif type != "resource_set" and resource.ResourceSet :
-                        set.resources.append( resource.select( type, props ) )
-            
+                elif type != "resource_set" and isinstance(resource,ResourceSet) :
+                    set.resources.append( resource.select( type, props ) )
         else :
             set.properties = self.properties 
             for resource in self.resources :
@@ -187,7 +185,7 @@ class ResourceSet(Resource):
                         set.resources.append( resource.copy() )
                         
                 elif type != "resource_set" and isinstance(resource,ResourceSet) :
-                        set.resources.append( resource.select( type, props , block) )
+                    set.resources.append( resource.select( type, props , block) )
         return set
     
 
@@ -236,7 +234,7 @@ class ResourceSet(Resource):
         
 
     #Puts all the resource hierarchy into one ResourceSet.
-    #The type can be either :node or :resource_set.
+    #The type can be either node or resource_set.
     def flatten(self, type = None ):
         set = ResourceSet()
         for resource in self.resources:
@@ -412,13 +410,28 @@ class ResourceSet(Resource):
     
     #todo verifier le super() 
     def __eq__(self, set ):
-        super(ResourceSet, self).__eq__(set) and self.resources == set.resources
-        
+
+        if not super(ResourceSet, self).__eq__(set) or len(self.resources)!=len(set.resources) :
+            return False
+
+        for i in range(0,len(self.resources)-1) :
+            if self.resources[i] != set.resources[i] :
+                return False
+        return True
+
+    def __ne__(self, set ):
+        return not (self==set)
 
     #Equality between to resoruce sets.
     def eql( self, set ) :
-        super(ResourceSet, self).__eq__(set) and self.resources == set.resources
-    
+        if not super(ResourceSet, self).__eq__(set) or len(self.resources)!=len(set.resources) :
+            return False
+
+        for i in range(1,len(self.resources)-1) :
+            if not self.resources[i].eql(set.resources[i]) :
+                return False
+
+        return True
 
     # Returns a ResourceSet with unique elements.
     # self.return [ResourceSet]     with unique elements
