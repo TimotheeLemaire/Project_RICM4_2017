@@ -356,7 +356,6 @@ class ResourceSet(Resource):
     #   all["lyon"] extract the resources form lyon cluster
     #   all[0]  return just one resource.
     def __getitem__( self,index ):
-        print "getitiem"
         count=0
         resource_set = ResourceSet()
         #it = ResourceSetIterator()
