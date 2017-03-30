@@ -2,7 +2,7 @@ import copy
 
 #A Resource maps a computational resource to an object which keeps 
 #Certains characteritics such as type, name, gateway.
-class Resource():
+class Resource(object):
     """docstring for Resource"""
     # self.Type #type of the resource
     # self.properties #properties of the resources
@@ -125,7 +125,7 @@ class ResourceSet(Resource):
     #attr_accessor :resources
     
     def __init__(self, name = None ):
-            super( self.resource_set, None, name )
+            super(ResourceSet, self).__init__("resource_set", None, name )
             self.resources = []
             self.resource_files = dict()
         
@@ -362,6 +362,7 @@ class ResourceSet(Resource):
     def __getitem__( self,index ):
         count=0
         resource_set = ResourceSet()
+        #it = ResourceSetIterator()
         it = ResourceSetIterator(self,"node")
         if isinstance(index,list) : #Range
             for node in ResourceSetIterator(self,"node") :
@@ -416,12 +417,12 @@ class ResourceSet(Resource):
     
     #todo verifier le super() 
     def __eq__(self, set ):
-        super().__eq__() and self.resources == set.resources
+        super(ResourceSet, self).__eq__(set) and self.resources == set.resources
         
 
     #Equality between to resoruce sets.
     def eql( self, set ) :
-        super().__eq__() and self.resources == set.resources
+        super(ResourceSet, self).__eq__(set) and self.resources == set.resources
     
 
     # Returns a ResourceSet with unique elements.
@@ -480,7 +481,7 @@ class ResourceSet(Resource):
 
     #alias nodefile node_file
 
-    #propre à ruby
+    #propre a ruby
     
     #Generates a directory.xml file for using as a resources 
     #For Gush.
@@ -568,7 +569,7 @@ class ResourceSetIterator:
         #
         #
         #attr_accessor :current, :iterator, :resource_set, :type
-        def initialize(self, resource_set, type=None):
+        def __init__(self, resource_set, type=None):
                 self.resource_set = resource_set
                 self.iterator = None
                 self.type = type
@@ -589,15 +590,15 @@ class ResourceSetIterator:
                     elif not self.type :
                         self.current = i
                         return
-                self.current = self.resource_set.resources.size
+                self.current = len(self.resource_set.resources)
         
  #         __getattribute__(...)
  # |      x.__getattribute__('name') <==> x.name
         #__getattribute('resource')
         #
         #
-        def resouce(self):
-                if( self.current >= self.resource_set.resources.size ):
+        def resource(self):
+                if( self.current >= len( self.resource_set.resources) ):
                     return None 
                 if self.iterator :
                     res = self.iterator.resource()
@@ -612,7 +613,7 @@ class ResourceSetIterator:
             res = None
             if not self.iterator :
                 self.current += 1
-            while not res and self.current < self.resource_set.resources.size : 
+            while not res and self.current < len(self.resource_set.resources) : 
                     if self.iterator :
                             self.iterator.next
                             res = self.iterator.resource
@@ -634,7 +635,7 @@ class ResourceSetIterator:
                     else:
                             self.current += 1
                     
-            if( self.current >= self.resource_set.resources.size ) :
+            if( self.current >= len(self.resource_set.resources)) :
                 raise StopIteration
                 self.current = 0
                 return None 
