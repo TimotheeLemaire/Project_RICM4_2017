@@ -151,18 +151,19 @@ def test_uniq() :
 		count += 1
 	assert(count == 1)
 
-def test_make_taktuk_command() :
 
-	r = resourceSet_test()
-	r.properties['gateway'] = 'tyty'
-	print(r.make_taktuk_command("date"))
-	print(" -m tyty -[ -m tutu -[ -m tutu downcast exec [ date ] -] -] -m tyty -[ -m titi downcast exec [ date ] -]")
-	#assert( r.make_taktuk_command("date") == " -m tyty -[ -m tutu -[ -m tutu downcast exec [ date ] -] -] -m tyty -[ -m titi downcast exec [ date ] -]")
+# Test false, uncertitude about version of taktuk
+
+# def test_make_taktuk_command() :
+# 	r = resourceSet_test()
+# 	r.properties['gateway'] = 'tyty'
+# 	assert( r.make_taktuk_command("date") == " -m tyty -[ -m tutu -[ -m tutu downcast exec [ date ] -] -] -m tyty -[ -m titi downcast exec [ date ] -]")
 
 test_select()
 test_flatten()
 test_iterator()
 test_uniq()
-test_make_taktuk_command()
+
+#test_make_taktuk_command()
 
 #test_yaml()
