@@ -390,7 +390,9 @@ class ResourceSet(Resource):
                 return resource
             count+=1
             #it.next()
-        return 
+        
+        raise StopIteration
+        return  
 
         
     
@@ -553,7 +555,8 @@ class ResourceSet(Resource):
             return str_cmd
         
 
-
+#TODO :  2 pb :lit pas le premier resource_set si type = resource set 
+#TODO :  pas de raise stopiteration dans getitem
 
 class ResourceSetIterator:
         #current : element courant 
@@ -570,7 +573,7 @@ class ResourceSetIterator:
                 self.current = 0
                 self.debut = True 
                 for i in range(len(resource_set.resources)) :
-                    print 'resource ' + str(i) + " est du type = "+ self.resource_set.resources[i].type
+                    # print 'resource ' + str(i) + " est du type = "+ self.resource_set.resources[i].type
                     # print 'type demande est = ' + self.type
                     if self.type == self.resource_set.resources[i].type :
                         self.current = i
@@ -579,7 +582,6 @@ class ResourceSetIterator:
                         # print "courrent dans init = " +str(self.current) 
                         return 
                     elif isinstance(self.resource_set.resources[i],ResourceSet) :
-                        print "fuuu"
                         self.iterator = ResourceSetIterator(self.resource_set.resources[i], self.type)
                         if self.iterator.resource :
                             self.current = i
@@ -594,7 +596,7 @@ class ResourceSetIterator:
                         if i!= 0 :
                             self.debut = False
                         return
-                print "dans la fin de init"
+                # print "dans la fin de init"
                 self.current = len(self.resource_set.resources)
         
         def resource(self):
@@ -613,7 +615,7 @@ class ResourceSetIterator:
             res = None
             if not self.iterator and not self.debut  :
                 self.current += 1
-            print 'len = ' +  str(len(self.resource_set.resources)) + ' current =' + str(self.current)
+            # print 'len = ' +  str(len(self.resource_set.resources)) + ' current =' + str(self.current)
             while not res and self.current < len(self.resource_set.resources) : 
                     # print "ici"
                     if self.iterator :
@@ -638,10 +640,7 @@ class ResourceSetIterator:
                                 self.current += 1
                                 
                             self.debut = False
-                            """
-                            if not res :
-                                    self.iterator = None
-                                    self.current += 1"""
+
                             
                     elif not self.type :
                             res = self.resource_set.resources[self.current]
@@ -650,7 +649,7 @@ class ResourceSetIterator:
                             self.current += 1
                     
             if not res:
-                self.current = 0
+                # self.current = 0
                 raise StopIteration
                 return None 
             # if self.iterator :

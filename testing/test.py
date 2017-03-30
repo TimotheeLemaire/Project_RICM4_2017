@@ -36,7 +36,9 @@ def test_yaml():
 r = resourceSet.ResourceSet("toto")
 tata = resourceSet.ResourceSet("tata")
 tata.append(resourceSet.Resource("node",None,"tutu"))
-
+tata.append(resourceSet.Resource("node",None,"tutu1"))
+tata.append(resourceSet.Resource("node",None,"tutu2"))
+tata.append(resourceSet.Resource("node",None,"tutu3"))
 tyty = resourceSet.ResourceSet("tyty") 
 tyty.append(resourceSet.Resource("node",None,"tete"))
 tyty.append(resourceSet.Resource("node",None,"tete1"))
@@ -44,31 +46,46 @@ tyty.append(resourceSet.Resource("node",None,"tete2"))
 tyty.append(resourceSet.Resource("node",None,"tete3"))
 tyty.append(resourceSet.Resource("node",None,"tete4"))
 
-r.append(tyty)
 
-r.append(resourceSet.Resource("node",None,"titi"))
 
+
+
+r.append(resourceSet.Resource("node",None,"tl"))
+r.append(resourceSet.Resource("node",None,"tp"))
+r.append(resourceSet.Resource("node",None,"tu"))
 r.append(tata) 
-
-
-
-
-
-
-
-
+r.append(tata) 
+r.append(resourceSet.Resource("node",None,"titi"))
+r.append(resourceSet.Resource("node",None,"titi1"))
+r.append(resourceSet.Resource("node",None,"titi3"))
+r.append(tata) 
+r.append(resourceSet.Resource("node",None,"titi4"))
+r.append(resourceSet.Resource("node",None,"titi5"))
+r.append(tyty)
 #*****************
 
-RI = resourceSet.ResourceSetIterator(r,"node")
-c = 0 
+RI = resourceSet.ResourceSetIterator(r,"resource_set")
+"""
+for i in RI:
+    print "                          " +str(i)  
+"""
+"""
+print "                          " + str(r[0])
+print "                          " + str(r[3])
+print  "                          " +str(r[15])
+print  "                          " +str(r[16])
+print  "                          " +str(r[17])
+print  "                          " +str(r[18])
+"""
 
-
-for i in RI :
-    c +=1
-    print i
-    if c == 5 :
+c= 0 
+for i in r : 
+    c += 1
+    print "                          " +str(i)  
+    if c == 20 :
         print "BREAK"
-        #break
+       # break
+
 
 
 
