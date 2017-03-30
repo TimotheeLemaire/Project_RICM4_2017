@@ -360,6 +360,7 @@ class ResourceSet(Resource):
     #   all["lyon"] extract the resources form lyon cluster
     #   all[0]  return just one resource.
     def __getitem__( self,index ):
+        print "getitiem"
         count=0
         resource_set = ResourceSet()
         #it = ResourceSetIterator()
@@ -374,10 +375,7 @@ class ResourceSet(Resource):
                         it.next()
             resource_set.properties=copy.deepcopy(self.properties)
             return resource_set
-            
 
-            
-      
         if isinstance(index,str) :
             it = ResourceSetIterator(self,"resource_set")
             for resource in ResourceSetIterator(self,"resource_set") :
@@ -509,15 +507,15 @@ class ResourceSet(Resource):
             str_cmd = ""
             #pd : separation resource set/noeuds
             if self.gw != "localhost" :
-            	sets =False
-              	sets_cmd = ""
-              	for resource in self.resources:
+                sets =False
+                sets_cmd = ""
+                for resource in self.resources:
                    if isinstance(resource,ResourceSet) :
                        sets = True
                        
                    sets_cmd += resource.make_taktuk_command(cmd)
                 if sets :
-                	str_cmd += " -m "+ self.gw() +"-[ " + sets_cmd + " -]" 
+                    str_cmd += " -m "+ self.gw() +"-[ " + sets_cmd + " -]" 
                 nodes = False
                 nodes_cmd = ""
                 
@@ -525,8 +523,8 @@ class ResourceSet(Resource):
                     if resource.type == "node" :
                         nodes = True
                         nodes_cmd += resource.make_taktuk_command(cmd)
-              	if nodes :
-              		str_cmd += " -l "+  self.gw_ssh_user() +" -m "+ self.gw()+" -[ -l "+self.ssh_user()+" " + nodes_cmd + " downcast exec [ "+cmd+" ] -]" 
+                if nodes :
+                    str_cmd += " -l "+  self.gw_ssh_user() +" -m "+ self.gw()+" -[ -l "+self.ssh_user()+" " + nodes_cmd + " downcast exec [ "+cmd+" ] -]" 
             else :
                 nodes = False
                 nodes_cmd = ""
@@ -538,14 +536,14 @@ class ResourceSet(Resource):
                         nodes = True
                         nodes_cmd += resource.make_taktuk_command(cmd)
                 
-            	print (" results of the command "+nodes_cmd )
-            	if nodes :
+                print (" results of the command "+nodes_cmd )
+                if nodes :
                     str_cmd += " -l "+ self.gw_ssh_user()+" -m "+ first +" -[ " + nodes_cmd + " downcast exec [ "+cmd+" ] -]" 
                     sets = False
                     sets_cmd = ""
 
                     for resource in self.resources :
-                    	if isinstance(resource,ResourceSet) :
+                        if isinstance(resource,ResourceSet) :
                             sets = True
                             sets_cmd += resource.make_taktuk_command(cmd)
                     if sets :
@@ -556,7 +554,7 @@ class ResourceSet(Resource):
                             
                     
             
-        	return str_cmd
+            return str_cmd
         
 
 
@@ -574,31 +572,37 @@ class ResourceSetIterator:
                 self.iterator = None
                 self.type = type
                 self.current = 0
-               
+                self.debut = True 
                 for i in range(len(resource_set.resources)) :
+                    print 'resource ' + str(i) + " est du type = "+ self.resource_set.resources[i].type
+                    # print 'type demande est = ' + self.type
                     if self.type == self.resource_set.resources[i].type :
-                                self.current = i
-                                return 
+                        self.current = i
+                        if i!= 0 :
+                            self.debut = False
+                        # print "courrent dans init = " +str(self.current) 
+                        return 
                     elif isinstance(self.resource_set.resources[i],ResourceSet) :
+                        print "fuuu"
                         self.iterator = ResourceSetIterator(self.resource_set.resources[i], self.type)
                         if self.iterator.resource :
                             self.current = i
+                            if i!= 0 :
+                                self.debut = False
                             return
                         else :
                             self.iterator = None
                                 
                     elif not self.type :
                         self.current = i
+                        if i!= 0 :
+                            self.debut = False
                         return
+                print "dans la fin de init"
                 self.current = len(self.resource_set.resources)
         
- #         __getattribute__(...)
- # |      x.__getattribute__('name') <==> x.name
-        #__getattribute('resource')
-        #
-        #
         def resource(self):
-                if( self.current >= len( self.resource_set.resources) ):
+                if( self.current > len( self.resource_set.resources) ):
                     return None 
                 if self.iterator :
                     res = self.iterator.resource()
@@ -611,42 +615,48 @@ class ResourceSetIterator:
 
         def next(self):
             res = None
-            if not self.iterator :
+            if not self.iterator and not self.debut  :
                 self.current += 1
+            print 'len = ' +  str(len(self.resource_set.resources)) + ' current =' + str(self.current)
             while not res and self.current < len(self.resource_set.resources) : 
+                    print "ici"
                     if self.iterator :
-                            self.iterator.next
-                            res = self.iterator.resource
+                            self.iterator.next()
+                            res = self.iterator.resource()
+                            self.debut = False
                             if not res :
                                     self.iterator = None
                                     self.current += 1
                             
                     elif self.type == self.resource_set.resources[self.current].type :
                             res = self.resource_set.resources[self.current]
+                            self.debut = False
                     elif isinstance(self.resource_set.resources[self.current],ResourceSet) :
                             self.iterator = ResourceSetIterator(self.resource_set.resources[self.current], self.type)
                             res = self.iterator.resource()
+                            self.debut = False
                             if not res :
                                     self.iterator = None
                                     self.current += 1
                             
                     elif not self.type :
                             res = self.resource_set.resources[self.current]
+                            self.debut= False
                     else:
                             self.current += 1
                     
-            if( self.current >= len(self.resource_set.resources)) :
-                raise StopIteration
+            if not res:
                 self.current = 0
+                raise StopIteration
                 return None 
-            if self.iterator :
-                res = self.iterator.resource()
+            # if self.iterator :
+            #     res = self.iterator.resource()
 
-            else :
-                res = self.resource_set.resources[self.current]
+            # else :
+            #     res = self.resource_set.resources[self.current]
             
             return res
-        
+                    
         def __iter__(self):
             return self
 

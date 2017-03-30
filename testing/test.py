@@ -34,18 +34,24 @@ def test_yaml():
 #test ResourceSet
 #******************
 r = resourceSet.ResourceSet("toto")
-r.append(resourceSet.Resource("node",None,"titi"))
 tata = resourceSet.ResourceSet("tata")
 tata.append(resourceSet.Resource("node",None,"tutu"))
-r.append(tata)
+tyty = resourceSet.ResourceSet("tyty") 
+tyty.append(resourceSet.Resource("node",None,"tutu"))
+r.append(tata) 
+r.append(resourceSet.Resource("node",None,"titi"))
+
+
+
 #*****************
 
-
-RI = resourceSet.ResourceSetIterator(r,"resource_set")
-
-for i in r : 
-    print  i
-    break
+RI = resourceSet.ResourceSetIterator(r,"node")
+c = 0 
+for i in RI :
+    c +=1
+    print i
+    if c == 3 :
+        break
 
 
 

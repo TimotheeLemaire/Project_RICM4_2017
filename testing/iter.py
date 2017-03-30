@@ -18,18 +18,20 @@ class itera:
 		def __len__(self):
 			return len(self.l)
 
+		def __getitem__(self,indice):
+			return self.l[-indice]
 
 		def __delitem__(self,v):
 			del( self.l[v] )
 	     	
-		def next(self):
+		"""def next(self):
 			if self.current >= len(self.l):
 				self.current = 0 
 				raise StopIteration
 				return None
 			else:
 				self.current += 1
-				return self.l[self.current-1]
+				return self.l[self.current-1]"""
 
 a=itera()
 # print len(a)
