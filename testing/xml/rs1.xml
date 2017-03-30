@@ -1,0 +1,32 @@
+<ResourceSet > <!-- name="toto">-->
+	<properties> 
+		<name>toto</name>
+	</properties>
+	<resources>	
+		<Resource>
+			<properties> 
+				<name> titi </name>
+			</properties>
+
+			<type>node</type>
+		</Resource>
+		<ResourceSet > <!-- name="toto">-->
+			<properties> 
+				<name>tata</name>
+			</properties>
+			<resources>	
+				<Resource>
+					<properties> 
+						<name> tutu </name>
+					</properties>
+
+					<type>node</type>
+				</Resource>
+		
+			</resources>
+			<type>resource_set</type>
+		</ResourceSet>
+
+	</resources>
+	<type>resource_set</type>
+</ResourceSet>

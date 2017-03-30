@@ -1,7 +1,8 @@
 --- !python/object:ResourceSet
-properties: 
+properties: { 
   name: toto
-resources:
+  }
+resources: []
   - !python/object:Resource
   properties:
     name: titi

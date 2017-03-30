@@ -1,0 +1,6 @@
+#REsource __init__(self,typ, prop=None , name = None):
+#
+##ResourceSet : _init__(self, name = None ):
+--- !ResourceSet
+name : fuu
+  

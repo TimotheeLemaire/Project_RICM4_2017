@@ -1,4 +1,9 @@
 import copy
+import yaml
+import xml.etree.ElementTree as ET
+from xml.etree import ElementTree
+from xml.dom import minidom
+
 
 #A Resource maps a computational resource to an object which keeps 
 #Certains characteritics such as type, name, gateway.
@@ -665,4 +670,104 @@ class ResourceSetIterator:
 
 
 
+#function for xml parsing
+def res_from_xml(tree):
+    #res = resourceSet.Resource()
+    d_prop= dict()
+    for child in tree :
+        #print child.tag
+        if child.tag == "properties":
+            n_prop = child
+        if child.tag =="type":
+            type =  child.text
+        
+    for child in n_prop :
+       d_prop[child.tag] = child.text
+       if child.tag == "name":
+           name = child.text
+    
+    res = Resource(type,d_prop,name)
 
+    return res 
+
+#Rs_fomr_xml :
+#
+#
+#@param : tree is the node of the resource_set
+#@return : resource_set
+def RS_from_xml(tree):
+    resource_set = ResourceSet()
+    
+    for child in tree :
+        if child.tag == "properties":
+            n_prop = child
+        elif child.tag == "resources":
+            n_resources = child            
+            
+        elif child.tag =="type"  :
+            resource_set.type = child.text
+            
+    for child in n_prop :
+       resource_set.properties[child.tag] = child.text
+       if child.tag == "name":
+           resource_set.name = child.text
+           
+    for child in n_resources :
+        if child.tag == "Resource":
+            resource_set.append(res_from_xml(child))
+        elif child.tag =="ResourceSet":
+            resource_set.append(RS_from_xml(child))
+
+    return resource_set
+
+def parser_xml(path):
+    tree = ET.parse(path) #'xml/rs1.xml'
+    root = tree.getroot()
+    return (RS_from_xml(root))
+
+#### function to create xml from a resource_set 
+def prettify(elem):
+  # Return a pretty-printed XML string for the Element.
+    
+    rough_string = ElementTree.tostring(elem, 'utf-8')
+    reparsed = minidom.parseString(rough_string)
+    return reparsed.toprettyxml(indent="  ")
+
+def R_toxml(r):
+    top = ET.Element('Resource')
+    prop = ET.SubElement(top,"properties")
+    
+    for key,value in r.properties.items():
+        c = ET.SubElement(prop, key)
+        c.text = value
+    
+    n_t = ET.SubElement(top,"type")
+    n_t.text = r.type
+    
+    return top 
+
+def Rs_toxml(rs):
+    top = ET.Element('ResourceSet')
+    prop = ET.SubElement(top,"properties")
+    
+    for key,value in rs.properties.items():
+        c = ET.SubElement(prop, key)
+        c.text = value
+    
+    resources = []
+    for res in rs.resources :
+        if isinstance(res,ResourceSet):
+            resources.append(Rs_toxml(res))
+            
+        elif isinstance(res,Resource):
+            resources.append(R_toxml(res))
+    
+    top.extend(resources)    
+    
+    n_t = ET.SubElement(top,"type")
+    n_t.text = rs.type
+    
+    return top
+
+def xml_writer(r):
+    return prettify(Rs_toxml(r))
