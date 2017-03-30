@@ -2,7 +2,7 @@ import copy
 
 #A Resource maps a computational resource to an object which keeps 
 #Certains characteritics such as type, name, gateway.
-class Resource():
+class Resource(object):
     """docstring for Resource"""
     # self.Type #type of the resource
     # self.properties #properties of the resources
@@ -125,7 +125,7 @@ class ResourceSet(Resource):
     #attr_accessor :resources
     
     def __init__(self, name = None ):
-            super( self.resource_set, None, name )
+            super(ResourceSet, self).__init__("resource_set", None, name )
             self.resources = []
             self.resource_files = dict()
         
@@ -386,7 +386,7 @@ class ResourceSet(Resource):
           #For this case a number is passed and we return a resource Object
               
         
-        #TODO vérifié la cohénrence de ce code il est bizarre 
+        #TODO verifie la cohenrence de ce code il est bizarre 
         for resource in ResourceSetIterator(self,"node"): 
             #resource = it.resource()
             #if resource :
@@ -416,12 +416,12 @@ class ResourceSet(Resource):
     
     #todo verifier le super() 
     def __eq__(self, set ):
-        super().__eq__() and self.resources == set.resources
+        super(ResourceSet, self).__eq__(set) and self.resources == set.resources
         
 
     #Equality between to resoruce sets.
     def eql( self, set ) :
-        super().__eq__() and self.resources == set.resources
+        super(ResourceSet, self).__eq__(set) and self.resources == set.resources
     
 
     # Returns a ResourceSet with unique elements.
