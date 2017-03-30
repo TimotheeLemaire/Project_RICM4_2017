@@ -46,7 +46,7 @@ tyty.append(resourceSet.Resource("node",None,"tete2"))
 tyty.append(resourceSet.Resource("node",None,"tete3"))
 tyty.append(resourceSet.Resource("node",None,"tete4"))
 
-
+tyty.append(tata)
 
 
 
@@ -54,6 +54,7 @@ r.append(resourceSet.Resource("node",None,"tl"))
 r.append(resourceSet.Resource("node",None,"tp"))
 r.append(resourceSet.Resource("node",None,"tu"))
 r.append(tata) 
+
 r.append(tata) 
 r.append(resourceSet.Resource("node",None,"titi"))
 r.append(resourceSet.Resource("node",None,"titi1"))
@@ -64,11 +65,15 @@ r.append(resourceSet.Resource("node",None,"titi5"))
 r.append(tyty)
 #*****************
 
-RI = resourceSet.ResourceSetIterator(r,"resource_set")
-"""
+
+
+
+
+RI = resourceSet.ResourceSetIterator(r,"node")
+
 for i in RI:
     print "                          " +str(i)  
-"""
+
 """
 print "                          " + str(r[0])
 print "                          " + str(r[3])
@@ -77,7 +82,7 @@ print  "                          " +str(r[16])
 print  "                          " +str(r[17])
 print  "                          " +str(r[18])
 """
-
+"""
 c= 0 
 for i in r : 
     c += 1
@@ -85,7 +90,7 @@ for i in r :
     if c == 20 :
         print "BREAK"
        # break
-
+"""
 
 
 

@@ -576,8 +576,6 @@ class ResourceSetIterator:
                     # print 'type demande est = ' + self.type
                     if self.type == self.resource_set.resources[i].type :
                         self.current = i
-                        if i!= 0 :
-                            self.debut = False
                         # print "courrent dans init = " +str(self.current) 
                         return 
                     elif isinstance(self.resource_set.resources[i],ResourceSet) :
@@ -628,6 +626,10 @@ class ResourceSetIterator:
                             
                     elif self.type == self.resource_set.resources[self.current].type :
                             res = self.resource_set.resources[self.current]
+                            if self.type == "resource_set" :
+                                self.iterator = ResourceSetIterator(self.resource_set.resources[self.current], self.type)
+
+
                             self.debut = False
                     elif isinstance(self.resource_set.resources[self.current],ResourceSet) :
                             self.iterator = ResourceSetIterator(self.resource_set.resources[self.current], self.type)
@@ -639,8 +641,6 @@ class ResourceSetIterator:
                                 self.current += 1
                                 
                             self.debut = False
-
-                            
                     elif not self.type :
                             res = self.resource_set.resources[self.current]
                             self.debut= False
@@ -648,7 +648,7 @@ class ResourceSetIterator:
                             self.current += 1
                     
             if not res:
-                # self.current = 0
+                self.current = 0
                 raise StopIteration
                 return None 
             # if self.iterator :
