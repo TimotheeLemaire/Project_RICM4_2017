@@ -475,40 +475,29 @@ class ResourceSet(Resource):
     #    resource_file( "node", update )
         
 
+
+
+
     #alias nodefile node_file
 
-    # def gen_keys(type=None ):
-    #     puts "Creating public keys for cluster ssh comunication"
-    #     resource_set = self.uniq.flatten(type)
-    #     resource_set.each { |resource|
-    #         cmd = "scp "
-    #         cmd += "-r ~/.ssh/ "
-    #         ### here we have to deal with the user ## we have to define one way to put the user.
-    #         cmd += " rootself.#{resource.properties[:name]}:~"
-    #         command_result = $client.asynchronous_command(cmd)
-    #         $client.command_wait(command_result["command_number"],1)
-    #         result = $client.command_result(command_result["command_number"])
-    #         puts cmd
-    #         puts result["stdout"]
-    #         puts result["stderr"]
-    #     }
+    #propre à ruby
     
     #Generates a directory.xml file for using as a resources 
     #For Gush.
-    # def make_gush_file( update = false):
-    #     gush_file = File("directory.xml","w+")
-    #     gush_file.puts("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
-    #     gush_file.puts("<gush>")
-    #     resource_set = self.flatten(:node)
-    #     resource_set.each{ |resource|
-    #         gush_file.puts( "<resource_manager type=\"ssh\">")
-    #         gush_file.puts("<node hostname=\"#{resource.properties[:name]}:15400\" user=\"lig_expe\" group=\"local\" />" )
+    def make_gush_file( update = false):
+        gush_file = File("directory.xml","w+")
+        gush_file.puts("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
+        gush_file.puts("<gush>")
+        resource_set = self.flatten(:node)
+        resource_set.each{ |resource|
+            gush_file.puts( "<resource_manager type=\"ssh\">")
+            gush_file.puts("<node hostname=\"#{resource.properties[:name]}:15400\" user=\"lig_expe\" group=\"local\" />" )
 
-    #         gush_file.puts("</resource_manager>")
-    #     }
-    #     gush_file.puts("</gush>")
-    #     gush_file.close
-    #     return gush_file.path
+            gush_file.puts("</resource_manager>")
+        }
+        gush_file.puts("</gush>")
+        gush_file.close
+        return gush_file.path
     
 
     #Creates the taktuk command to execute on the ResourceSet
