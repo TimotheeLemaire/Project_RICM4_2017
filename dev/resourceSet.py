@@ -5,58 +5,145 @@ from xml.etree import ElementTree
 from xml.dom import minidom
 
 
+"""
+    ``ResourceSet`` module
+    ======================
+ 
+    Used to gather resources into an object with several usefull functions 
+ 
+    :Example:
+ 
+    >>> from resourceSet import *
+    >>> resource_set = parser_xml("resourceSet.xml")
+    >>> for i in resource_set :
+    >>>     print i 
+    node1
+    node2
+    node3
+    node4
+
+ 
+    important features :
+    -------------------
+ 
+    Resource_set is made iterable by using the class ResourceSetIterator(resource_set,"type ask")
+    resource_set behave like a usual python list
+    Most of the list function are available : 
+        del 
+        resourceSet[indice]
+        resourceSet.append(..)
+        len(resourceSet)
+
+    Every functions embodied documentation, and to acces documention simply call help(function ) in python shell
+ 
+ 
+"""
+
+
 #A Resource maps a computational resource to an object which keeps 
 #Certains characteritics such as type, name, gateway.
 class Resource(object):
-    """docstring for Resource"""
-    # self.Type #type of the resource
-    # self.properties #properties of the resources
+    """
+    Class Resource 
 
+        Attributes:
+            type         type of the resource of type string
+            properties   properties of the resources of type dict
 
-    # Creates a new Resource Object.
-    # self.param [type] type of the source
-    # self.param [properties] object property
-    # self.param [String] String name
-    # self.return [resource] Resource Object
+    """
+
     def __init__(self,typ, prop=None , name = None):
+        """ Creates a new Resource Object.
+
+
+            :param typ: The first number to add
+            :param prop:  object property
+            :param name: String name
+            :type typ: string
+            :type prop: dict
+            :type name : string
+            :return: Resource Object
+            :rtype: Resource
+
+            :Example:
+
+            >>> r = Resource("node",name="toto")
+            <resourceSet.Reousrce object at .... >
+        """
         self.type = typ #type of the resource
         self.properties = dict()  #properties of the resources
-
-        if prop : #test si prop est vide 
-            #----replaces the contents of self.properties hash with
-            #----contents of 'properties' hash
+        if prop : 
             self.properties = prop
 
         if name :
             self.properties["name"] = name 
 
- #     __getattribute__(...)
- # |      x.__getattribute__('name') <==> x.name
 
-    # Return the name of the resource.
-    # self.return [String] the name of the resource
     def name(self) :
+        """ Return the name of the resource.
+
+            :return: the name of the resource
+            :rtype: str
+
+
+        """
         return self.properties["name"]
 
-    #Returns the name of the resource.
     def __str__(self) :
+        """ Return the name of the resource.
+
+            :return: the name of the resource
+            :rtype: str
+
+            call with str(obj)
+
+             :Example:
+
+            >>> str(r)
+            toto
+        """
         return self.properties["name"]        
 
-    #Sets the name of the resource.
     def name_equal(self,name):
+        """ Sets the name of the resource.
+
+            :param name: String name
+            :type name : string
+        """
         self.properties["name"] = name
         return self
     
 
     def ssh_user(self):
+        """ Return propertie ssh_user.
+
+            :return: propertie ssh_user.
+        """
         return self.properties["ssh_user"]
     
     
     def gw_ssh_user(self):
+        """ Return propertie gw_ssh_user.
+
+            :return: properties gw_ssh_user.
+        """
         return self.properties["gw_ssh_user"]
     
 
     def corresponds(self, props ):
+        """ check if a resource corresponds to the props
+           
+            Also test whenever a value of the properties are callable: test the callable value with key as an argument
+
+
+            :param prop:  object property
+            :type prop: dict
+
+
+
+            :return: True if the resource have the same properties than the parameters 
+            :rtype: Boolean
+        """        
         for key,value in props.items():
             if callable(value) :
                 if not value(self.properties[key]):
@@ -64,7 +151,7 @@ class Resource(object):
             else :
                 if (self.properties[key] != value):
                     return False
-        return True
+        return True  # return props == self.preperties ? 
 
     
   
