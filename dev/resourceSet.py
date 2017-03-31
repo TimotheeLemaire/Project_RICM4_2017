@@ -1,6 +1,7 @@
 import copy
 import yaml
 import xml.etree.ElementTree as ET
+import execo
 from xml.etree import ElementTree
 from xml.dom import minidom
 
@@ -117,7 +118,9 @@ class Resource(object):
     def make_taktuk_command(self,cmd) :
         return " -m " +self.name()
     
-
+    #try to return the ressource as an execo host
+    def host() :
+        return Host()
 
 #class ResourceSetIterator
 
