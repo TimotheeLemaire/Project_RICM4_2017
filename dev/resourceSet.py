@@ -44,7 +44,7 @@ from xml.dom import minidom
 #Certains characteritics such as type, name, gateway.
 class Resource(object):
     """
-    Class Resource 
+        Class Resource 
 
         Attributes:
             type         type of the resource of type string
@@ -56,7 +56,7 @@ class Resource(object):
         """ Creates a new Resource Object.
 
 
-            :param typ: The first number to add
+            :param typ: the type of the object could be "node"  or "Resource_set"
             :param prop:  object property
             :param name: String name
             :type typ: string
@@ -68,7 +68,7 @@ class Resource(object):
             :Example:
 
             >>> r = Resource("node",name="toto")
-            <resourceSet.Reousrce object at .... >
+            <resourceSet.Resource object at .... >
         """
         self.type = typ #type of the resource
         self.properties = dict()  #properties of the resources
@@ -139,8 +139,6 @@ class Resource(object):
             :param prop:  object property
             :type prop: dict
 
-
-
             :return: True if the resource have the same properties than the parameters 
             :rtype: Boolean
         """        
@@ -155,21 +153,41 @@ class Resource(object):
 
     
   
-    #Creates a copy of the resource object.
     def copy(self):
+        """Creates a copy of the resource object.
+            
+            :return: copy of the resource
+            :rtype: Resource object
+
+        """
         result = Resource(self.type)
         result.properties =  self.properties 
         return result
     
 
-    #Equality, Two Resource objects are equal if they have the 
-    #same type and the same properties as well.
     def __eq__( self,res ): 
+        """
+            Equality, Two Resource objects are equal if they have the 
+            same type and the same properties as well.
+            
+
+            :return: result of the test
+            :rtype: boolean
+
+        """
         return self.type == res.type and self.properties == res.properties
     
 
-    #Returns true if self and other are the same object.
     def eql( self,res ):
+        """
+            Equality, Two Resource objects are equal if they have the 
+            same type and the same properties as well.
+            
+
+            :return: true if self and other are the same object.
+            :rtype: boolean
+
+        """
         if self.type == res.type and self.__class__ == res.__class__:
             for key,value in self.properties.items():
                 if(res.properties[key] != value):
@@ -178,30 +196,52 @@ class Resource(object):
         else :
             return False
 
-    #Returns the name of the gateway
     def gateway(self):
+        """ Returns the name of the gateway
+
+            :return: Returns the name of the gateway
+            :rtype : string
+        """
         if self.properties["gateway"]:
             return self.properties["gateway"] 
         return "localhost"
     
 
     def gateway_equal(self,host):
+        """ set the getaway
+            
+
+            :param host:  host to be set
+            :type host: string
+
+        """
       self.properties["gateway"] = host
-      #return self
+      return self
     
     #alias gw gateway
     gw = gateway
 
 
     def job(self):
+        """ get the id of the resource 
+
+            :return: Returns id 
+            :rtype : int
+
+        """
         if self.properties["id"]:
             return self.properties["id"] 
         return 0
 
 
-    #Use to make the list of machines for
-    #the taktuk command
+
     def make_taktuk_command(self,cmd) :
+        """
+            Use to make the list of machines for
+    
+            :return: the taktuk command
+            :rtype : string
+        """
         return " -m " +self.name()
     
 
@@ -213,17 +253,47 @@ classe resourceSet  :
     
 
 ***********************************"""
+
+
 class ResourceSet(Resource):
-    #attr_accessor :resources
+    """
+        Class ResourceSet heret from Resource
+
+        Attributes: 
+            type         (inheret from Resource) type of the resource of type string
+            properties   (inheret from Resource) properties of the resources of type dict
+            Resource     list of the resources
+            resrouces_files  
+
+    """
     
     def __init__(self, name = None ):
+        """ Creates a new ResourceSet Object.
+
+
+            :param name: String name
+            :type name : string
+
+
+            :return: Resourceset Object
+            :rtype: ResourceSet
+
+            :Example:
+
+            >>> r = ResourceSet("node",name="toto")
+            <resourceSet.ResourceSet object at .... >
+        """
             super(ResourceSet, self).__init__("resource_set", None, name )
             self.resources = []
             self.resource_files = dict()
         
 
-    #Creates a copy of the ResourceSet Object
+
     def copy(self):
+        """Creates a copy of the ResourceSet Object
+            :return: Resourceset Object
+            :rtype: ResourceSet
+        """
             result = ResourceSet()
             result.properties = self.properties 
             for resource in self.resources :
@@ -232,15 +302,28 @@ class ResourceSet(Resource):
             return result
         
 
-    #Add a Resource object to the ResourceSet
-    #On devrait peut etre le renommer en append ?
     def append(self, resource ):
+      """Add a Resource object to the ResourceSet
+        
+
+        :param resource: the resource or ResourceSet to add to the atributes resources of the current resourceSet
+        :type resource : Objet ( can be Resource or ResourceSet )
+        named append to stick with the usel python function 
+        
+      """      
       self.resources.append( resource )
       return self
         
 
-    # Return the first element which is an object of the Resource Class
     def first (self, type=None ):
+        """ Return the first element which is an object of the Resource Class
+
+            :param type:  the type of the object could be "node"  or "Resource_set"
+            :type type: string
+
+            :return: 
+            :rtype: Resource
+        """
         for resource in self.resources:
             if (resource.type == type) :
                 return resource
@@ -254,22 +337,44 @@ class ResourceSet(Resource):
         
 
     def select_resource(self, props ):
+        """ Return the first element which correspond to the properties given in parameters
+
+            :param props: props which the ressource should correspond to
+            :type props: string
+
+            :return: return the selected Resource Object
+            :rtype: Resource
+        """
         for resource in self.resources:
             if resource.corresponds( props ) :
                 return resource
 
 
     def select(self, type=None, props=None , block=None):
+        """ select every resource of the given type which correspond to the props or the block ( see warnings ) and wrap it in a ResourceSet
+            
+
+            :param type:  the type of the object could be "node"  or "Resource_set"
+            :param props: props which the ressource should correspond to
+            :param block:  function or lambda function which return boolean 
+            :type type: string
+            :type props: dict
+            :type block: function or lambda function which return boolean
+
+
+            :return: return a ResourceSet with all the resources which are selected
+            :rtype: Resource
+
+            :Example:
+            >>>r2 = r.select('node',block = (lambda x : x.name()=='tutu'))
+            >>>r1 = r.select('node',({'name': 'tutu'}))
+            r1 = r2
+
+            .. seealso:: correspond
+            .. warning:: if both parameters props and block are given only props will be treated 
+        """
         set = ResourceSet()
-        if not block :
-            set.properties = self.properties 
-            for resource in self.resources :
-                if not type or resource.type == type :
-                    if resource.corresponds( props ) :
-                        set.resources.append( resource.copy() )
-                elif type != "resource_set" and isinstance(resource,ResourceSet) :
-                    set.resources.append( resource.select( type, props ) )
-        else :
+        if not props :
             set.properties = self.properties 
             for resource in self.resources :
                 if not type or resource.type == type :
@@ -278,6 +383,15 @@ class ResourceSet(Resource):
                         
                 elif type != "resource_set" and isinstance(resource,ResourceSet) :
                     set.resources.append( resource.select( type, props , block) )
+        else :
+            set.properties = self.properties 
+            for resource in self.resources :
+                if not type or resource.type == type :
+                    if resource.corresponds( props ) :
+                        set.resources.append( resource.copy() )
+                elif type != "resource_set" and isinstance(resource,ResourceSet) :
+                    set.resources.append( resource.select( type, props ) )
+        
         return set
     
 
@@ -303,7 +417,7 @@ class ResourceSet(Resource):
             return None
         
     #del ? __del__
-    def delate(self,resource):
+    def delete(self,resource):
             res = None
             for i in range(len(self.resources)) :
                 if self.resources[i] == resource :
