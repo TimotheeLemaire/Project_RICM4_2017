@@ -1,6 +1,7 @@
 import copy
 import yaml
 import xml.etree.ElementTree as ET
+import execo
 from xml.etree import ElementTree
 from xml.dom import minidom
 
@@ -119,17 +120,19 @@ class Resource(object):
 
             :return: propertie ssh_user.
         """
-        return self.properties["ssh_user"]
-    
+        if "ssh_user" in self.properties :
+            return self.properties["ssh_user"]
+        return None
     
     def gw_ssh_user(self):
         """ Return propertie gw_ssh_user.
 
             :return: properties gw_ssh_user.
         """
-        return self.properties["gw_ssh_user"]
-    
-
+        if "gw_ssh_user" in self.properties :
+            return self.properties["gw_ssh_user"]
+        return None
+        
     def corresponds(self, props ):
         """ check if a resource corresponds to the props
            
@@ -202,7 +205,7 @@ class Resource(object):
             :return: Returns the name of the gateway
             :rtype : string
         """
-        if self.properties["gateway"]:
+        if "gateway" in self.properties:
             return self.properties["gateway"] 
         return "localhost"
     
@@ -229,7 +232,7 @@ class Resource(object):
             :rtype : int
 
         """
-        if self.properties["id"]:
+        if "id" in self.properties:
             return self.properties["id"] 
         return 0
 
@@ -244,6 +247,25 @@ class Resource(object):
         """
         return " -m " +self.name()
     
+    #try to return the ressource as an execo host
+    def host(self) :
+        if "gateway" in self.properties :
+            address = self.properties["gateway"]
+        else :
+            address = "localhost"
+        if "user" in self.properties :
+            user = self.properties["user"]
+        else :
+            user = False
+        if "keyfile" in self.properties :
+            keyfile = self.properties["keyfile"]
+        else :
+            keyfile = False
+        if "port" in self.properties :
+            port = self.properties["port"]
+        else :
+            port = False
+        return execo.Host(address,user,keyfile,port)
 
 
 #class ResourceSetIterator
