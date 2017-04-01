@@ -36,7 +36,7 @@ from xml.dom import minidom
         len(resourceSet)
 
     ..note::  Every functions embodied documentation, and to acces documention simply call help(function ) in python shell
-            this module is adapted from resourceSet.rb from expo
+            this module is adapted from `expo <http://expo.gforge.inria.fr/>`_
     
  
 """
@@ -1142,7 +1142,7 @@ def parser_xml(path):
 
 def prettify(elem):
     """Return a pretty-printed XML string for the Element.
-        function taken from the site : https://pymotw.com/2/xml/etree/ElementTree/create.html
+        function taken from the site : `<https://pymotw.com/2/xml/etree/ElementTree/create.html>`_
     """
     
     rough_string = ElementTree.tostring(elem, 'utf-8')
