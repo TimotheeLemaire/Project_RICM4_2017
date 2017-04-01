@@ -50,12 +50,14 @@ class Resource(object):
     
 
     def ssh_user(self):
-        return self.properties["ssh_user"]
-    
+        if "ssh_user" in self.properties :
+            return self.properties["ssh_user"]
+        return None
     
     def gw_ssh_user(self):
-        return self.properties["gw_ssh_user"]
-    
+        if "gw_ssh_user" in self.properties :
+            return self.properties["gw_ssh_user"]
+        return None
 
     def corresponds(self, props ):
         for key,value in props.items():
@@ -94,7 +96,7 @@ class Resource(object):
 
     #Returns the name of the gateway
     def gateway(self):
-        if self.properties["gateway"]:
+        if "gateway" in self.properties:
             return self.properties["gateway"] 
         return "localhost"
     
@@ -108,7 +110,7 @@ class Resource(object):
 
 
     def job(self):
-        if self.properties["id"]:
+        if "id" in self.properties:
             return self.properties["id"] 
         return 0
 
@@ -119,8 +121,25 @@ class Resource(object):
         return " -m " +self.name()
     
     #try to return the ressource as an execo host
-    def host() :
-        return Host()
+    def host(self) :
+        if "gateway" in self.properties :
+            address = self.properties["gateway"]
+        else :
+            address = "localhost"
+        if "user" in self.properties :
+            user = self.properties["user"]
+        else :
+            user = False
+        if "keyfile" in self.properties :
+            keyfile = self.properties["keyfile"]
+        else :
+            keyfile = False
+        if "port" in self.properties :
+            port = self.properties["port"]
+        else :
+            port = False
+        return execo.Host(address,user,keyfile,port)
+
 
 #class ResourceSetIterator
 
