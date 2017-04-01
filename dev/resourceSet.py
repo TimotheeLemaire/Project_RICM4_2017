@@ -396,6 +396,17 @@ class ResourceSet(Resource):
     
 
     def delete_first(self,resource):
+        """ delete the first resource equal to the parameters resource 
+            return None if it has failed to found the resource
+
+            :param resource: the resource which have to be deleted
+            :type resource: ResourceSet or Resource
+
+
+            :return: the resource or None if none found
+            :rtype: Resource
+
+        """
         for i in range(len(self.resources)) :
             if self.resources[i] == resource :
                 self.resources.pop(i)
@@ -407,6 +418,16 @@ class ResourceSet(Resource):
         
 
     def delete_first_if(self,block=None):
+            """ delete the first resource which return True with the given function in the block parameter
+            return None if it has failed to found the resource
+
+            :param block: function or lambda function which take a resource in parameter and return Boolean
+            :type block: callable object
+
+
+            :return: the resource or None if none found
+            :rtype: Resource
+            """
             for i in range(len(self.resources)) :
                 if block(self.resources[i]) :
                     return self.resources.pop(i)
@@ -416,8 +437,19 @@ class ResourceSet(Resource):
                         return res
             return None
         
-    #del ? __del__
+
     def delete(self,resource):
+            """ delete all resources equal to the parameters resource 
+            return None if it has failed to found one
+
+            :param resource: the resource which have to be deleted
+            :type resource: ResourceSet or Resource
+
+
+            :return: the last resource deleted or None if none found
+            :rtype: Resource
+
+            """
             res = None
             for i in range(len(self.resources)) :
                 if self.resources[i] == resource :
@@ -430,7 +462,17 @@ class ResourceSet(Resource):
             return res
         
 
-    def delete_if(self,block=None):
+    def delete_if(self,block=None):            
+        """ delete all resource which return True with the given function in the block parameter
+        return None if it has failed to found the resource
+
+        :param block: function or lambda function which take a resource in parameter and return Boolean
+        :type block: callable object
+
+
+        :return: the last resource or None if none found
+        :rtype: Resource
+        """
         for i in range(len(self.resources)) :
             if block(self.resources[i]) :
                 self.resources.pop(i)
@@ -439,9 +481,16 @@ class ResourceSet(Resource):
         return self
         
 
-    #Puts all the resource hierarchy into one ResourceSet.
-    #The type can be either node or resource_set.
+    
     def flatten(self, type = None ):
+        """Puts all the resource hierarchy into one ResourceSet.
+
+        :param type:  the type of the object could be either "node"  or "Resource_set"
+        :type type: string
+
+        :return: the ResourceSet with all resource faltened
+        :rtype: ResourceSet
+        """
         set = ResourceSet()
         for resource in self.resources:
             if not type or resource.type == type :
@@ -453,8 +502,14 @@ class ResourceSet(Resource):
         return set
     
 
-    # def flatten! (self,type = None ):
     def flatten_not (self,type = None ):
+        """flatten the current resourceSet
+
+        :param type:  the type of the object could be either "node"  or "Resource_set"
+        :type type: string
+        
+        .. seealso:: flatten
+        """
         set = self.flatten(type)
         self.resources = set.resources 
         return self
@@ -463,10 +518,21 @@ class ResourceSet(Resource):
 
         # alias all flatten
 
-    #Creates groups of increasing size based on
-    #the slice_step paramater. This goes until the 
-    #size of the ResourceSet.
+
     def each_slice( self,type = None, slice_step = 1, block=None):
+        """ Creates groups of increasing size based on the slice_step paramater. 
+            This goes until the size of the ResourceSet.
+
+        :param type:  the type of the object could be either "node"  or "Resource_set"
+        :param slice_step: int or function or lambda function which explicit the way how resources are browsed
+        :param block: function or lambda function which will be call on every resource
+        :type type: string
+        :type slice_step: int or function
+        :type block: callable object
+
+        .. todo:: test this function
+        .. note:: this kind of resource browsing stick more with ruby functionnality than python one because Bloc are limited in python
+        """
         i = 1
         number = 0
         while True :
@@ -501,10 +567,32 @@ class ResourceSet(Resource):
 
     #Invokes the block for each set of power of two resources.
     def each_slice_power2(self, type = None, block=None ):
+        """ Browse the resourceSet exponentialy . 
+            This goes until the size of the ResourceSet.
+
+        :param type:  the type of the object could be either "node"  or "Resource_set"
+        :param block: function or lambda function which will be call on every resource
+        :type type: string
+        :type block: callable object
+
+        .. todo:: test this function
+        .. note:: this kind of resource browsing stick more with ruby functionnality than python one because Bloc are limited in python
+        """
         self.each_slice( type, lambda i :  i*i , block )
         
 
     def each_slice_double( self,type = None, block=None ):
+        """ Browse the resourceSet two per two . 
+            This goes until the size of the ResourceSet.
+
+        :param type:  the type of the object could be either "node"  or "Resource_set"
+        :param block: function or lambda function which will be call on every resource
+        :type type: string
+        :type block: callable object
+
+        .. todo:: test this function
+        .. note:: this kind of resource browsing stick more with ruby functionnality than python one because Bloc are limited in python
+        """
         self.each_slice( type, lambda i :  2**i , block )
     
     ## Fix Me  is the type really important , or were are going to deal always with nodes
@@ -529,37 +617,57 @@ class ResourceSet(Resource):
     #         ************************************
             
     def each( self,type = None, block=None ):
+        """ Browse the resourceSet  . 
+            This goes until the size of the ResourceSet.
+
+        :param type:  the type of the object could be either "node"  or "Resource_set"
+        :param block: function or lambda function which will be call on every resource
+        :type type: string
+        :type block: callable object
+
+        .. todo:: test this function
+        .. note:: this kind of resource browsing stick more with ruby functionnality than python one because Bloc are limited in python 
+                    prefer a \"for resource in ResourceSetIterator(self, "node") \"  to browse every node
+        """
         for resource in ResourceSetIterator(self, type):
             block( resource )            
-        
-    """TODO !!! """
-    # Returns the number of resources in the ResourceSet
-    # self.return [Integer] the number of resources
-    """
-    def length(self):
-        count=0
-        self.each("node",lambda count : count+=1) # impossible d'incrementer en fonction lambda
-        return count
-    """
-# |      x.__getattribute__('name') <==> x.name
-        #__getattribute('resource')
+
     def __len__(self):
+        """Returns the number of node in the ResourceSet
+
+            can be called the python way : len( resourceSet)
+
+            :return:  the number of resources
+            :rtype: Integer
+
+        """
         count = 0 
         for resource in ResourceSetIterator(self, "node"):
             count +=1
         return count
 
-    # Returns a subset of the ResourceSet.
-    # self.note It can be used with a range as a parameter.
-        # self.param [Range] index  Returns a subset specified by the range.
-        # self.param [String] index Returns a subset which is belongs to the same cluster.
-        # self.param [Integer] index    Returns just one resource.
-    # self.return [ResourceSet]     a ResourceSet object
-    # self.example 
-    #   all[1..6] extract resources from 1 to 6
-    #   all["lyon"] extract the resources form lyon cluster
-    #   all[0]  return just one resource.
+
     def __getitem__( self,index ):
+        """Returns a subset of the ResourceSet.
+            
+        :param  index: [Range] Returns a subset specified by the range, [String] index Returns a subset which is belongs to the same cluster, [Integer] Returns just one resource   .
+        
+        :return: a ResourceSet object
+        :rtype: ResourceSet     
+        
+
+        :Example: 
+        
+        >>>all[range(1,6)]
+        extract resources from 1 to 5
+        >>>all["lyon"]
+        extract the resources form lyon cluster
+        >>>all[0]
+        return just one resource.
+
+        ..note:: It can be used with a range(or int list) as a parameter or a string .
+        ..warning: Raise StopIteration if call with a wrong parameter or looking for an inexistant resource.
+        """
         count=0
         resource_set = ResourceSet()
         #it = ResourceSetIterator()
@@ -582,9 +690,6 @@ class ResourceSet(Resource):
                     return resource
 
           #For this case a number is passed and we return a resource Object
-              
-        
-        #TODO verifie la validite de ce code il est bizarre 
         for resource in ResourceSetIterator(self,"node"): 
             #resource = it.resource()
             #if resource :
@@ -594,17 +699,22 @@ class ResourceSet(Resource):
             count+=1
             #it.next()
         
-        raise StopIteration
+        raise StopIteration #utile pour rendre Resource Set itérable 
         return  
 
         
     
 
-    # Returns a resouce or an array of resources.
-    # self.return [Resource] a resource or array of resources
+    
     def to_resource(self)  :
+        """
+        Returns a resouce or an array of resources.
+        
+        :return: a resource or array of resources
+        :rtype: Resource
+        """
         if len(self) == 1 :
-            #la boucle est pas necessaire mais cela est simmilaire au ruby vec un each
+            #la boucle est pas necessaire mais cela est simmilaire au ruby avec un each
             for resource in ResourceSetIterator(self,"node"):
                 return resource
         else :
@@ -614,8 +724,19 @@ class ResourceSet(Resource):
             return resource_list
         
     
-    #todo verifier le super() 
     def __eq__(self, set ):
+        """
+        test if current set are equal with parameter
+
+        :param set: 
+        :type set: ResourceSet or Resource
+
+        :return: result of the test
+        :rtype: boolean
+
+
+        ..note:: can be called the python way with == 
+        """
 
         if not super(ResourceSet, self).__eq__(set) or len(self.resources)!=len(set.resources) :
             return False
@@ -626,10 +747,30 @@ class ResourceSet(Resource):
         return True
 
     def __ne__(self, set ):
+                """
+        test if current set are non equal with parameter
+
+        :param set: 
+        :type set: ResourceSet or Resource
+
+        :return: result of the test
+        :rtype: boolean
+
+        ..note:: can be call the python way with != 
+        """
         return not (self==set)
 
-    #Equality between to resoruce sets.
+    
     def eql( self, set ) :
+                """
+        Equality between to resoruce sets.
+
+        :param set: 
+        :type set: ResourceSet or Resource
+
+        :return: result of the test
+        :rtype: boolean
+        """
         if not super(ResourceSet, self).__eq__(set) or len(self.resources)!=len(set.resources) :
             return False
 
@@ -639,15 +780,25 @@ class ResourceSet(Resource):
 
         return True
 
-    # Returns a ResourceSet with unique elements.
-    # self.return [ResourceSet]     with unique elements
+    # 
     def uniq(self):
-        # set = copy.deepcopy(self)
+        """
+        Returns a ResourceSet with unique elements.
+
+        :return: ResourceSet with unique elements
+        :rtype: ResourceSet     
+        """
         set = self.copy()
         return set.uniq_aux()
     
 
     def uniq_aux(self):
+        """
+        Returns same ResourceSet with unique elements.
+
+        :return: same ResourceSet with unique elements
+        :rtype: ResourceSet     
+        """
         i = 0
         # while i < len(self.resources) -1 :
         for i in range(len(self.resources) -1):
@@ -694,32 +845,19 @@ class ResourceSet(Resource):
 
 
     #alias nodefile node_file
-
-    #propre a ruby
-    
-    #Generates a directory.xml file for using as a resources 
-    #For Gush.
-    # def make_gush_file( update = false):
-    #     gush_file = File("directory.xml","w+")
-    #     gush_file.puts("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
-    #     gush_file.puts("<gush>")
-    #     resource_set = self.flatten(:node)
-    #     resource_set.each{ |resource|
-    #         gush_file.puts( "<resource_manager type=\"ssh\">")
-    #         gush_file.puts("<node hostname=\"#{resource.properties[:name]}:15400\" user=\"lig_expe\" group=\"local\" />" )
-
-    #         gush_file.puts("</resource_manager>")
-    #     }
-    #     gush_file.puts("</gush>")
-    #     gush_file.close
-    #     return gush_file.path
     
 
-    #Creates the taktuk command to execute on the ResourceSet
-    #It takes into account if the resources are grouped under
-    #different gatways in order to perform this execution more
-    #efficiently.
+
     def make_taktuk_command(self,cmd):
+        """Creates the taktuk command
+
+        Creates the taktuk command to execute on the ResourceSet
+        It takes into account if the resources are grouped under
+        different gatways in order to perform this execution more
+        efficiently.
+
+        ..todo:: verify this function
+        """
             str_cmd = ""
             #pd : separation resource set/noeuds
             if self.gw != "localhost" :
@@ -772,9 +910,6 @@ class ResourceSet(Resource):
             
             return str_cmd
         
-
-#TODO :  2 pb :lit pas le premier resource_set si type = resource set 
-#TODO :  pas de raise stopiteration dans getitem
 
 class ResourceSetIterator:
         #current : element courant 
