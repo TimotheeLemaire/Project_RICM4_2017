@@ -1247,7 +1247,7 @@ def Rs_toxml(rs):
     """
     top = ET.Element('ResourceSet')
     prop = ET.SubElement(top,"properties")
-    
+    resource = ET.SubElement(top, "resources")
     for key,value in rs.properties.items():
         c = ET.SubElement(prop, key)
         c.text = value
@@ -1260,7 +1260,7 @@ def Rs_toxml(rs):
         elif isinstance(res,Resource):
             resources.append(R_toxml(res))
     
-    top.extend(resources)    
+    resource.extend(resources)    
     
     n_t = ET.SubElement(top,"type")
     n_t.text = rs.type

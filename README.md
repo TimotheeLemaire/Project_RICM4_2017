@@ -17,7 +17,8 @@ The module resourceSet is fully fonctionnable and are compatible with normaly ev
 For now we have to convert the resourceSet into host using function named host.
 
 See the doc for more information about function : 
-* <a href="https://github.com/TimotheeLemaire/resourceSet-for-execo/blob/gh-pages/dev/docs/_build/html/source/resourceSet.html">Doc</a>
+* <a href="https://github.com/TimotheeLemaire/resourceSet-for-execo/blob/gh-pages/dev/docs/_build/html/source/resourceSet.html">Doc</a>  
+or look for the doc on the Dairy page
 
 
 See our Student instructions and dairy at : 
