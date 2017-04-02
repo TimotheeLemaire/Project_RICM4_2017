@@ -35,9 +35,8 @@ from xml.dom import minidom
         resourceSet.append(..)
         len(resourceSet)
 
-    ..note::  Every functions embodied documentation, and to acces documention simply call help(function ) in python shell
-            this module is adapted from resourceSet.rb from expo
-    
+    Every functions embodied documentation, and to acces documention simply call help(function ) in python shell
+ 
  
 """
 
@@ -54,16 +53,18 @@ class Resource(object):
 
     """
 
-    def __init__(self,typ, prop=None , name = None):
+    def __init__(self,typ=None, prop=None , name = None, host = None):
         """ Creates a new Resource Object.
 
 
             :param typ: the type of the object could be "node"  or "Resource_set"
             :param prop:  object property
             :param name: String name
+            :param host: Host to convert
             :type typ: string
             :type prop: dict
             :type name : string
+            :type host : execo.host
             :return: Resource Object
             :rtype: Resource
 
@@ -72,13 +73,25 @@ class Resource(object):
             >>> r = Resource("node",name="toto")
             <resourceSet.Resource object at .... >
         """
-        self.type = typ #type of the resource
-        self.properties = dict()  #properties of the resources
-        if prop : 
-            self.properties = prop
+        if host :
+            if typ :
+                self.type = typ
+            else :
+                self.type = 'node'
+            self.properties = {'address':host.address,'user':host.user,'keyfile':host.keyfile,'port':host.port}
+            if prop : 
+                self.properties.update(prop)
+            if name :
+                self.properties["name"] = name
 
-        if name :
-            self.properties["name"] = name 
+        elif typ :
+            self.type = typ #type of the resource
+            self.properties = dict()  #properties of the resources
+            if prop : 
+                self.properties = prop
+
+            if name :
+                self.properties["name"] = name 
 
 
     def name(self) :
@@ -104,7 +117,9 @@ class Resource(object):
             >>> str(r)
             toto
         """
-        return self.properties["name"]        
+        if "name" in self.properties :
+            return self.properties["name"]
+        else : return "nameless"
 
     def name_equal(self,name):
         """ Sets the name of the resource.
@@ -241,15 +256,22 @@ class Resource(object):
 
     def make_taktuk_command(self,cmd) :
         """
-            Use to make the list of machines 
+            Use to make the list of machines for
     
             :return: the taktuk command
             :rtype : string
         """
         return " -m " +self.name()
     
-    #try to return the ressource as an execo host
     def host(self) :
+        """
+            try to convert the ressource as an execo host
+            use the properties : gateway, user, keyfile and port
+            default gateway is localhost.
+
+            :return: an execo Host
+            :rtype : execo.Host
+        """
         if "gateway" in self.properties :
             address = self.properties["gateway"]
         else :
@@ -267,6 +289,19 @@ class Resource(object):
         else :
             port = False
         return execo.Host(address,user,keyfile,port)
+
+
+    #TODO Convertion into and from execo Process. relevant ? 
+    
+
+#class ResourceSetIterator
+
+"""********************************
+classe resourceSet  : 
+    
+
+***********************************"""
+
 
 class ResourceSet(Resource):
     """
@@ -316,16 +351,16 @@ class ResourceSet(Resource):
         
 
     def append(self, resource ):
-      """Add a Resource object to the ResourceSet
+        """Add a Resource object to the ResourceSet
         
 
         :param resource: the resource or ResourceSet to add to the atributes resources of the current resourceSet
         :type resource : Objet ( can be Resource or ResourceSet )
         named append to stick with the usel python function 
         
-      """      
-      self.resources.append( resource )
-      return self
+        """      
+        self.resources.append( resource )
+        return self
         
 
     def first (self, type=None ):
@@ -379,7 +414,6 @@ class ResourceSet(Resource):
             :rtype: Resource
 
             :Example:
-
             >>>r2 = r.select('node',block = (lambda x : x.name()=='tutu'))
             >>>r1 = r.select('node',({'name': 'tutu'}))
             r1 = r2
@@ -612,19 +646,34 @@ class ResourceSet(Resource):
     ## Fix Me  is the type really important , or were are going to deal always with nodes
     def each_slice_array( self,slices=1, block=None):
         self.each_slice( None,slices, block)
+        
 
+    #Calls block once for each element in self, depending on the type of resource.
+    #if the type is :resource_set, it is going to iterate over the several resoruce sets defined.
+    #:node it is the default type which iterates over all the resources defined in the resource set.
+    #
+    # ********************************
+    #  deprecated 
+    #  ********************************
+    #   
+    #def each( self,type = None, block=None ):
+    #     it = ResourceSetIterator(self, type)
+    #     while it.resource() :
+    #         block( it.resource() )
+    #         it.next()
+    #         
+    #         ************************************
             
     def each( self,type = None, block=None ):
-        """ 
-        Calls block once for each element in self, depending on the type of resource.
-        if the type is :resource_set, it is going to iterate over the several resoruce sets defined.
-        :node it is the default type which iterates over all the resources defined in the resource set.
+        """ Browse the resourceSet  . 
+            This goes until the size of the ResourceSet.
 
         :param type:  the type of the object could be either "node"  or "Resource_set"
         :param block: function or lambda function which will be call on every resource
         :type type: string
         :type block: callable object
 
+        .. todo:: test this function
         .. note:: this kind of resource browsing stick more with ruby functionnality than python one because Bloc are limited in python 
                     prefer a \"for resource in ResourceSetIterator(self, "node") \"  to browse every node
         """
@@ -634,7 +683,7 @@ class ResourceSet(Resource):
     def __len__(self):
         """Returns the number of node in the ResourceSet
 
-            ..note:: can be called the python way : len( resourceSet)
+            can be called the python way : len( resourceSet)
 
             :return:  the number of resources
             :rtype: Integer
@@ -669,6 +718,7 @@ class ResourceSet(Resource):
         """
         count=0
         resource_set = ResourceSet()
+        #it = ResourceSetIterator()
         it = ResourceSetIterator(self,"node")
         if isinstance(index,list) : #Range
             for node in ResourceSetIterator(self,"node") :
@@ -680,17 +730,19 @@ class ResourceSet(Resource):
                         it.next()
             resource_set.properties=copy.deepcopy(self.properties)
             return resource_set
-        #if index is an alias : type of string
+
         if isinstance(index,str) :
             it = ResourceSetIterator(self,"resource_set")
             for resource in ResourceSetIterator(self,"resource_set") :
                 if resource.properties["alias"] == index :
                     return resource
 
-        #For this case a number is passed and we return a resource Object
+          #For this case a number is passed and we return a resource Object
         for resource in ResourceSetIterator(self,"node"): 
+            #resource = it.resource()
+            #if resource :
             if count==index :
-
+                #resource_set.resources.push( resource )
                 return resource
             count+=1
             #it.next()
@@ -710,7 +762,7 @@ class ResourceSet(Resource):
         :rtype: Resource
         """
         if len(self) == 1 :
-            #la boucle est pas necessaire mais cela est simmilaire au ruby avec un each
+            #la boucle n'est pas necessaire mais cela est simmilaire au ruby avec un each
             for resource in ResourceSetIterator(self,"node"):
                 return resource
         else :
@@ -795,6 +847,8 @@ class ResourceSet(Resource):
         :return: same ResourceSet with unique elements
         :rtype: ResourceSet     
         """
+        i = 0
+        # while i < len(self.resources) -1 :
         for i in range(len(self.resources) -1):
             pos = []
             for j in range(i+1,len(self.resources)):
@@ -803,6 +857,8 @@ class ResourceSet(Resource):
                       
             for p in reversed(pos):
                 del (self.resources[p])
+            
+            # i += 1 
 
         for resource in self.resources :
             if isinstance(resource, ResourceSet):
@@ -832,6 +888,10 @@ class ResourceSet(Resource):
     #def node_file( update=False ):
     #    resource_file( "node", update )
         
+
+
+
+
     #alias nodefile node_file
     
 
@@ -893,12 +953,25 @@ class ResourceSet(Resource):
                                 str_cmd += " -m "+first + " -[ " + sets_cmd + " -]"
                         else:
                                 str_cmd += sets_cmd
-                        
-                
-        
         return str_cmd
-        
 
+
+    def hosts(self) :
+        """
+            try to convert the resourceSet as a list of execo host
+            use the properties : gateway, user, keyfile and port
+            default gateway is localhost.
+
+            :return: a list of execo Host
+            :rtype : list of execo.Host
+        """
+        hostlist = list()
+        for r in self :
+            if (r.type=='node') :
+                hostlist.append(r.host())
+
+        return hostlist
+        
 class ResourceSetIterator:
         """
             Class ResourceSet heret from Resource
@@ -1208,3 +1281,6 @@ def xml_writer(r):
 
     """
     return prettify(Rs_toxml(r))
+
+
+
