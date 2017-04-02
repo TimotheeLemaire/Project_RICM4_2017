@@ -63,8 +63,8 @@ class Resource(object):
             :param host: Host to convert
             :type typ: string
             :type prop: dict
-            :type name : string
-            :type host : execo.host
+            :type name: string
+            :type host: execo.host
             :return: Resource Object
             :rtype: Resource
 
@@ -125,7 +125,7 @@ class Resource(object):
         """ Sets the name of the resource.
 
             :param name: String name
-            :type name : string
+            :type name: string
         """
         self.properties["name"] = name
         return self
@@ -320,7 +320,7 @@ class ResourceSet(Resource):
 
 
             :param name: String name
-            :type name : string
+            :type name: string
 
 
             :return: Resourceset Object
@@ -414,8 +414,8 @@ class ResourceSet(Resource):
             :rtype: Resource
 
             :Example:
-            >>>r2 = r.select('node',block = (lambda x : x.name()=='tutu'))
-            >>>r1 = r.select('node',({'name': 'tutu'}))
+            >>> r2 = r.select('node',block = (lambda x : x.name()=='tutu'))
+            >>> r1 = r.select('node',({'name': 'tutu'}))
             r1 = r2
 
             .. seealso:: correspond
@@ -706,15 +706,12 @@ class ResourceSet(Resource):
 
         :Example: 
         
-        >>>all[range(1,6)]
-        extract resources from 1 to 5
-        >>>all["lyon"]
-        extract the resources form lyon cluster
-        >>>all[0]
-        return just one resource.
+        >>> all[range(1,6)] #extract resources from 1 to 5
+        >>> all["lyon"]  #extract the resources form lyon cluster
+        >>> all[0] #return just one resource.
 
-        ..note:: It can be used with a range(or int list) as a parameter or a string .
-        ..warning: Raise StopIteration if call with a wrong parameter or looking for an inexistant resource.
+        .. note:: It can be used with a range(or int list) as a parameter or a string .
+        .. warning:: Raise StopIteration if call with a wrong parameter or looking for an inexistant resource.
         """
         count=0
         resource_set = ResourceSet()
@@ -783,7 +780,7 @@ class ResourceSet(Resource):
         :rtype: boolean
 
 
-        ..note:: can be called the python way with == 
+        .. note:: can be called the python way with == 
         """
 
         if not super(ResourceSet, self).__eq__(set) or len(self.resources)!=len(set.resources) :
@@ -804,7 +801,7 @@ class ResourceSet(Resource):
         :return: result of the test
         :rtype: boolean
 
-        ..note:: can be call the python way with != 
+        .. note:: can be call the python way with != 
         """
         return not (self==set)
 
@@ -1012,7 +1009,7 @@ class ResourceSetIterator:
                 :return: Resource Object
                 :rtype: Resource
 
-                ..note:: if no type are given it will give every kind of object contained
+                .. note:: if no type are given it will give every kind of object contained
 
             """
 
@@ -1075,7 +1072,7 @@ class ResourceSetIterator:
             except StopIteration :
             ...
 
-            ..warning:: Raise a Stopiteration at the end
+            .. warning:: Raise a Stopiteration at the end
             """
             res = None
             if not self.iterator and not self.debut  :
