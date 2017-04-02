@@ -10,3 +10,6 @@ Enhance fonctionnalities of the library Execo.
 - [ ] Add notion a of session ( allow to handle state of an experiment)
 - [ ] Create a Rest API, with an tilisation of the framowork REST
 - [x] Integrate a ResourceSet handler like the one in Expo 
+
+
+The module resourceSet is fully fonctionnable : 

@@ -159,7 +159,7 @@ class Resource(object):
             :type prop: dict
 
             :return: True if the resource have the same properties than the parameters 
-            :rtype: Boolean
+            :rtype: Bool
         """        
         for key,value in props.items():
             if callable(value) :
@@ -219,7 +219,7 @@ class Resource(object):
         """ Returns the name of the gateway
 
             :return: Returns the name of the gateway
-            :rtype : string
+            :rtype: string
         """
         if "gateway" in self.properties:
             return self.properties["gateway"] 
@@ -245,7 +245,7 @@ class Resource(object):
         """ get the id of the resource 
 
             :return: Returns id 
-            :rtype : int
+            :rtype: int
 
         """
         if "id" in self.properties:
@@ -259,7 +259,7 @@ class Resource(object):
             Use to make the list of machines for
     
             :return: the taktuk command
-            :rtype : string
+            :rtype: string
         """
         return " -m " +self.name()
     
@@ -270,7 +270,7 @@ class Resource(object):
             default gateway is localhost.
 
             :return: an execo Host
-            :rtype : execo.Host
+            :rtype: execo.Host
         """
         if "gateway" in self.properties :
             address = self.properties["gateway"]
@@ -963,7 +963,7 @@ class ResourceSet(Resource):
             default gateway is localhost.
 
             :return: a list of execo Host
-            :rtype : list of execo.Host
+            :rtype: list of execo.Host
         """
         hostlist = list()
         for r in self :

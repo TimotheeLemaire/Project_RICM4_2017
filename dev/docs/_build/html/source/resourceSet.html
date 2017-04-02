@@ -76,7 +76,7 @@
 
 <dl class="class">
 <dt id="resourceSet.Resource">
-<em class="property">class </em><code class="descclassname">resourceSet.</code><code class="descname">Resource</code><span class="sig-paren">(</span><em>typ</em>, <em>prop=None</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Resource" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">resourceSet.</code><code class="descname">Resource</code><span class="sig-paren">(</span><em>typ=None</em>, <em>prop=None</em>, <em>name=None</em>, <em>host=None</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Resource" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Class Resource</p>
 <dl class="docutils">
@@ -146,9 +146,10 @@ same type and the same properties as well.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Returns the name of the gateway</td>
 </tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)">string</a></td>
+</tr>
 </tbody>
 </table>
-<p>:rtype : string</p>
 </dd></dl>
 
 <dl class="method">
@@ -175,9 +176,10 @@ same type and the same properties as well.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Returns the name of the gateway</td>
 </tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)">string</a></td>
+</tr>
 </tbody>
 </table>
-<p>:rtype : string</p>
 </dd></dl>
 
 <dl class="method">
@@ -197,7 +199,20 @@ same type and the same properties as well.</p>
 <dl class="method">
 <dt id="resourceSet.Resource.host">
 <code class="descname">host</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Resource.host" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>try to convert the ressource as an execo host
+use the properties : gateway, user, keyfile and port
+default gateway is localhost.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">an execo Host</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">execo.Host</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="resourceSet.Resource.job">
@@ -209,24 +224,26 @@ same type and the same properties as well.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Returns id</td>
 </tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)">int</a></td>
+</tr>
 </tbody>
 </table>
-<p>:rtype : int</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="resourceSet.Resource.make_taktuk_command">
 <code class="descname">make_taktuk_command</code><span class="sig-paren">(</span><em>cmd</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Resource.make_taktuk_command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Use to make the list of machines</p>
+<dd><p>Use to make the list of machines for</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the taktuk command</td>
 </tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)">string</a></td>
+</tr>
 </tbody>
 </table>
-<p>:rtype : string</p>
 </dd></dl>
 
 <dl class="method">
@@ -391,9 +408,10 @@ return None if it has failed to found the resource</p>
 <dl class="method">
 <dt id="resourceSet.ResourceSet.each">
 <code class="descname">each</code><span class="sig-paren">(</span><em>type=None</em>, <em>block=None</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.each" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls block once for each element in self, depending on the type of resource.
-if the type is :resource_set, it is going to iterate over the several resoruce sets defined.
-:node it is the default type which iterates over all the resources defined in the resource set.</p>
+<dd><dl class="docutils">
+<dt>Browse the resourceSet  . </dt>
+<dd>This goes until the size of the ResourceSet.</dd>
+</dl>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -564,6 +582,24 @@ prefer a &#8220;for resource in ResourceSetIterator(self, &#8220;node&#8221;) &#
 <p class="first admonition-title">See also</p>
 <p class="last">flatten</p>
 </div>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.hosts">
+<code class="descname">hosts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.hosts" title="Permalink to this definition">¶</a></dt>
+<dd><p>try to convert the resourceSet as a list of execo host
+use the properties : gateway, user, keyfile and port
+default gateway is localhost.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a list of execo Host</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of execo.Host</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
