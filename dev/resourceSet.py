@@ -1,5 +1,4 @@
 import copy
-import yaml
 import xml.etree.ElementTree as ET
 import execo
 from xml.etree import ElementTree
