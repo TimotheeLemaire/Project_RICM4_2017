@@ -12,4 +12,9 @@ Enhance fonctionnalities of the library Execo.
 - [x] Integrate a ResourceSet handler like the one in Expo 
 
 
-The module resourceSet is fully fonctionnable : 
+The module resourceSet is fully fonctionnable and are compatible with normaly every function from expo. 
+
+For now we have to convert the resourceSet into host using function named host.
+
+See the doc for more information about function : 
+* <a href="testRel/myLib">html/</a>
