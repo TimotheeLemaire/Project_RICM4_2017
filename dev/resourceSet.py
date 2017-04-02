@@ -7,7 +7,7 @@ from xml.dom import minidom
 
 
 """
-    ``ResourceSet`` module
+    ``ResourceSet`` module omg
     ======================
  
     Used to gather resources into an object with several usefull functions 
@@ -214,13 +214,13 @@ class Resource(object):
     def gateway_equal(self,host):
         """ set the getaway
             
-
+    
             :param host:  host to be set
             :type host: string
-
+    
         """
-      self.properties["gateway"] = host
-      return self
+        self.properties["gateway"] = host
+        return self
     
     #alias gw gateway
     gw = gateway
@@ -296,9 +296,9 @@ class ResourceSet(Resource):
             >>> r = ResourceSet("node",name="toto")
             <resourceSet.ResourceSet object at .... >
         """
-            super(ResourceSet, self).__init__("resource_set", None, name )
-            self.resources = []
-            self.resource_files = dict()
+        super(ResourceSet, self).__init__("resource_set", None, name )
+        self.resources = []
+        self.resource_files = dict()
         
 
 
@@ -307,12 +307,12 @@ class ResourceSet(Resource):
             :return: Resourceset Object
             :rtype: ResourceSet
         """
-            result = ResourceSet()
-            result.properties = self.properties 
-            for resource in self.resources :
-                result.resources.append(copy.deepcopy(resource))
+        result = ResourceSet()
+        result.properties = self.properties 
+        for resource in self.resources :
+            result.resources.append(copy.deepcopy(resource))
 
-            return result
+        return result
         
 
     def append(self, resource ):
@@ -695,7 +695,7 @@ class ResourceSet(Resource):
             count+=1
             #it.next()
         
-        raise StopIteration #utile pour rendre Resource Set itérable 
+        raise StopIteration #utile pour rendre Resource Set iterable 
         return  
 
         
@@ -743,7 +743,7 @@ class ResourceSet(Resource):
         return True
 
     def __ne__(self, set ):
-                """
+        """
         test if current set are non equal with parameter
 
         :param set: 
@@ -846,86 +846,86 @@ class ResourceSet(Resource):
 
         ..todo:: verify this function
         """
-            str_cmd = ""
-            #pd : separation resource set/noeuds
-            if self.gw != "localhost" :
-                sets =False
-                sets_cmd = ""
-                for resource in self.resources:
-                   if isinstance(resource,ResourceSet) :
-                       sets = True
-                       
-                   sets_cmd += resource.make_taktuk_command(cmd)
-                if sets :
-                    str_cmd += " -m "+ self.gw() +"-[ " + sets_cmd + " -]" 
-                nodes = False
-                nodes_cmd = ""
-                
-                for resource in self.resources:
-                    if resource.type == "node" :
-                        nodes = True
-                        nodes_cmd += resource.make_taktuk_command(cmd)
-                if nodes :
-                    str_cmd += " -l "+  self.gw_ssh_user() +" -m "+ self.gw()+" -[ -l "+self.ssh_user()+" " + nodes_cmd + " downcast exec [ "+cmd+" ] -]" 
-            else :
-                nodes = False
-                nodes_cmd = ""
-                first = ""
-                for resource in self.resources :
-                    if resource.type == "node" :
-                        if not nodes :   
-                            first = resource.name 
-                        nodes = True
-                        nodes_cmd += resource.make_taktuk_command(cmd)
-                
-                print (" results of the command "+nodes_cmd )
-                if nodes :
-                    str_cmd += " -l "+ self.gw_ssh_user()+" -m "+ first +" -[ " + nodes_cmd + " downcast exec [ "+cmd+" ] -]" 
-                    sets = False
-                    sets_cmd = ""
-
-                    for resource in self.resources :
-                        if isinstance(resource,ResourceSet) :
-                            sets = True
-                            sets_cmd += resource.make_taktuk_command(cmd)
-                    if sets :
-                            if nodes : 
-                                    str_cmd += " -m "+first + " -[ " + sets_cmd + " -]"
-                            else:
-                                    str_cmd += sets_cmd
-                            
-                    
+        str_cmd = ""
+        #pd : separation resource set/noeuds
+        if self.gw != "localhost" :
+            sets =False
+            sets_cmd = ""
+            for resource in self.resources:
+               if isinstance(resource,ResourceSet) :
+                   sets = True
+                   
+               sets_cmd += resource.make_taktuk_command(cmd)
+            if sets :
+                str_cmd += " -m "+ self.gw() +"-[ " + sets_cmd + " -]" 
+            nodes = False
+            nodes_cmd = ""
             
-            return str_cmd
+            for resource in self.resources:
+                if resource.type == "node" :
+                    nodes = True
+                    nodes_cmd += resource.make_taktuk_command(cmd)
+            if nodes :
+                str_cmd += " -l "+  self.gw_ssh_user() +" -m "+ self.gw()+" -[ -l "+self.ssh_user()+" " + nodes_cmd + " downcast exec [ "+cmd+" ] -]" 
+        else :
+            nodes = False
+            nodes_cmd = ""
+            first = ""
+            for resource in self.resources :
+                if resource.type == "node" :
+                    if not nodes :   
+                        first = resource.name 
+                    nodes = True
+                    nodes_cmd += resource.make_taktuk_command(cmd)
+            
+            print (" results of the command "+nodes_cmd )
+            if nodes :
+                str_cmd += " -l "+ self.gw_ssh_user()+" -m "+ first +" -[ " + nodes_cmd + " downcast exec [ "+cmd+" ] -]" 
+                sets = False
+                sets_cmd = ""
+
+                for resource in self.resources :
+                    if isinstance(resource,ResourceSet) :
+                        sets = True
+                        sets_cmd += resource.make_taktuk_command(cmd)
+                if sets :
+                        if nodes : 
+                                str_cmd += " -m "+first + " -[ " + sets_cmd + " -]"
+                        else:
+                                str_cmd += sets_cmd
+                        
+                
+        
+        return str_cmd
         
 
 class ResourceSetIterator:
-    """
-        Class ResourceSet heret from Resource
+        """
+            Class ResourceSet heret from Resource
+        
+            it will look in every resourceSet contained in the initial resourceSet
+            usefull to make a resourceSet iterable see example 
     
-        it will look in every resourceSet contained in the initial resourceSet
-        usefull to make a resourceSet iterable see example 
-
-        Attributes: 
-            current : index for the '(<current element 
-            iterator : a resourceSet element to browset element from a sub resourceSet 
-            resource_set: initial resoureSet
-            type : type of the init resourceSet
-
-
-        :Example:
-
-        >>> from resourceSet import *
-        >>> resource_set = parser_xml("resourceSet.xml")
-        >>> for i in ResourceSetIterator(resource_set :
-        >>>     print i 
-        node1
-        node2
-        node3
-        node4
-
-
-    """
+            Attributes: 
+                current : index for the '(<current element 
+                iterator : a resourceSet element to browset element from a sub resourceSet 
+                resource_set: initial resoureSet
+                type : type of the init resourceSet
+    
+    
+            :Example:
+    
+            >>> from resourceSet import *
+            >>> resource_set = parser_xml("resourceSet.xml")
+            >>> for i in ResourceSetIterator(resource_set :
+            >>>     print i 
+            node1
+            node2
+            node3
+            node4
+    
+    
+        """
 
         def __init__(self, resource_set, type=None):
             """ Creates a new Resource Object.
@@ -991,19 +991,16 @@ class ResourceSetIterator:
             """
             place the index current on the next element and return it 
             
-
-
             :return: the next resource
             :rtype: resource of the same type as the attributes type 
-
 
             :Example:
 
             it = ResouceSetIterator(resource_set,"node")
             try :
-                it.next()
+            it.next()
             except StopIteration :
-                ...
+            ...
 
             ..warning:: Raise a Stopiteration at the end
             """
@@ -1045,7 +1042,7 @@ class ResourceSetIterator:
                 self.current = 0
                 raise StopIteration
                 return None 
-             return res
+            return res
                     
         def __iter__(self):
             """ method to make ResourceSetIterator iterable

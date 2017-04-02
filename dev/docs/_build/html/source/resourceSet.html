@@ -1,0 +1,896 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>resourceSet module &mdash; ResourceSet 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="ResourceSet 1 documentation" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-resourceSet">
+<span id="resourceset-module"></span><h1>resourceSet module<a class="headerlink" href="#module-resourceSet" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="resourceSet.RS_from_xml">
+<code class="descclassname">resourceSet.</code><code class="descname">RS_from_xml</code><span class="sig-paren">(</span><em>tree</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.RS_from_xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>function for xml parsing which return a ResourceSet</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tree</strong> (<em>ElementTree</em>) &#8211; tree is a node of a resourceSet</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Resource creatinf</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#resourceSet.ResourceSet" title="resourceSet.ResourceSet">ResourceSet</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="resourceSet.R_toxml">
+<code class="descclassname">resourceSet.</code><code class="descname">R_toxml</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.R_toxml" title="Permalink to this definition">¶</a></dt>
+<dd><p>function for parsing node into a xml</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>r</strong> (<a class="reference internal" href="#resourceSet.Resource" title="resourceSet.Resource"><em>Resource</em></a>) &#8211; Resource</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a node from Element tree</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Element tree</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="resourceSet.Resource">
+<em class="property">class </em><code class="descclassname">resourceSet.</code><code class="descname">Resource</code><span class="sig-paren">(</span><em>typ</em>, <em>prop=None</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Class Resource</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd>type         type of the resource of type string
+properties   properties of the resources of type dict</dd>
+</dl>
+<dl class="method">
+<dt id="resourceSet.Resource.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Resource.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a copy of the resource object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">copy of the resource</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Resource object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.Resource.corresponds">
+<code class="descname">corresponds</code><span class="sig-paren">(</span><em>props</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Resource.corresponds" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if a resource corresponds to the props</p>
+<p>Also test whenever a value of the properties are callable: test the callable value with key as an argument</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prop</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; object property</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the resource have the same properties than the parameters</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.Resource.eql">
+<code class="descname">eql</code><span class="sig-paren">(</span><em>res</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Resource.eql" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equality, Two Resource objects are equal if they have the 
+same type and the same properties as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">true if self and other are the same object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.Resource.gateway">
+<code class="descname">gateway</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Resource.gateway" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the name of the gateway</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Returns the name of the gateway</td>
+</tr>
+</tbody>
+</table>
+<p>:rtype : string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.Resource.gateway_equal">
+<code class="descname">gateway_equal</code><span class="sig-paren">(</span><em>host</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Resource.gateway_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the getaway</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>host</strong> (<a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; host to be set</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.Resource.gw">
+<code class="descname">gw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Resource.gw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the name of the gateway</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Returns the name of the gateway</td>
+</tr>
+</tbody>
+</table>
+<p>:rtype : string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.Resource.gw_ssh_user">
+<code class="descname">gw_ssh_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Resource.gw_ssh_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return propertie gw_ssh_user.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">properties gw_ssh_user.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.Resource.host">
+<code class="descname">host</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Resource.host" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.Resource.job">
+<code class="descname">job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Resource.job" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the id of the resource</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Returns id</td>
+</tr>
+</tbody>
+</table>
+<p>:rtype : int</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.Resource.make_taktuk_command">
+<code class="descname">make_taktuk_command</code><span class="sig-paren">(</span><em>cmd</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Resource.make_taktuk_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use to make the list of machines</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the taktuk command</td>
+</tr>
+</tbody>
+</table>
+<p>:rtype : string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.Resource.name">
+<code class="descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Resource.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the name of the resource.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the name of the resource</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.Resource.name_equal">
+<code class="descname">name_equal</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Resource.name_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the name of the resource.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; String name</td>
+</tr>
+</tbody>
+</table>
+<p>:type name : string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.Resource.ssh_user">
+<code class="descname">ssh_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Resource.ssh_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return propertie ssh_user.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">propertie ssh_user.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="resourceSet.ResourceSet">
+<em class="property">class </em><code class="descclassname">resourceSet.</code><code class="descname">ResourceSet</code><span class="sig-paren">(</span><em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#resourceSet.Resource" title="resourceSet.Resource"><code class="xref py py-class docutils literal"><span class="pre">resourceSet.Resource</span></code></a></p>
+<p>Class ResourceSet heret from Resource</p>
+<dl class="docutils">
+<dt>Attributes: </dt>
+<dd>type         (inheret from Resource) type of the resource of type string
+properties   (inheret from Resource) properties of the resources of type dict
+Resource     list of the resources
+resrouces_files</dd>
+</dl>
+<dl class="method">
+<dt id="resourceSet.ResourceSet.append">
+<code class="descname">append</code><span class="sig-paren">(</span><em>resource</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a Resource object to the ResourceSet</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resource</strong> &#8211; the resource or ResourceSet to add to the atributes resources of the current resourceSet</td>
+</tr>
+</tbody>
+</table>
+<p>:type resource : Objet ( can be Resource or ResourceSet )
+named append to stick with the usel python function</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a copy of the ResourceSet Object
+:return: Resourceset Object
+:rtype: ResourceSet</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><em>resource</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete all resources equal to the parameters resource 
+return None if it has failed to found one</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resource</strong> (<em>ResourceSet or Resource</em>) &#8211; the resource which have to be deleted</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the last resource deleted or None if none found</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#resourceSet.Resource" title="resourceSet.Resource">Resource</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.delete_first">
+<code class="descname">delete_first</code><span class="sig-paren">(</span><em>resource</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.delete_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete the first resource equal to the parameters resource 
+return None if it has failed to found the resource</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resource</strong> (<em>ResourceSet or Resource</em>) &#8211; the resource which have to be deleted</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the resource or None if none found</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#resourceSet.Resource" title="resourceSet.Resource">Resource</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.delete_first_if">
+<code class="descname">delete_first_if</code><span class="sig-paren">(</span><em>block=None</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.delete_first_if" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete the first resource which return True with the given function in the block parameter
+return None if it has failed to found the resource</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>block</strong> (<em>callable object</em>) &#8211; function or lambda function which take a resource in parameter and return Boolean</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the resource or None if none found</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#resourceSet.Resource" title="resourceSet.Resource">Resource</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.delete_if">
+<code class="descname">delete_if</code><span class="sig-paren">(</span><em>block=None</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.delete_if" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete all resource which return True with the given function in the block parameter
+return None if it has failed to found the resource</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>block</strong> (<em>callable object</em>) &#8211; function or lambda function which take a resource in parameter and return Boolean</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the last resource or None if none found</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#resourceSet.Resource" title="resourceSet.Resource">Resource</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.each">
+<code class="descname">each</code><span class="sig-paren">(</span><em>type=None</em>, <em>block=None</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.each" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls block once for each element in self, depending on the type of resource.
+if the type is :resource_set, it is going to iterate over the several resoruce sets defined.
+:node it is the default type which iterates over all the resources defined in the resource set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; the type of the object could be either &#8220;node&#8221;  or &#8220;Resource_set&#8221;</li>
+<li><strong>block</strong> (<em>callable object</em>) &#8211; function or lambda function which will be call on every resource</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">this kind of resource browsing stick more with ruby functionnality than python one because Bloc are limited in python 
+prefer a &#8220;for resource in ResourceSetIterator(self, &#8220;node&#8221;) &#8221;  to browse every node</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.each_slice">
+<code class="descname">each_slice</code><span class="sig-paren">(</span><em>type=None</em>, <em>slice_step=1</em>, <em>block=None</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.each_slice" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Creates groups of increasing size based on the slice_step paramater. </dt>
+<dd>This goes until the size of the ResourceSet.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; the type of the object could be either &#8220;node&#8221;  or &#8220;Resource_set&#8221;</li>
+<li><strong>slice_step</strong> (<em>int or function</em>) &#8211; int or function or lambda function which explicit the way how resources are browsed</li>
+<li><strong>block</strong> (<em>callable object</em>) &#8211; function or lambda function which will be call on every resource</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">this kind of resource browsing stick more with ruby functionnality than python one because Bloc are limited in python</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.each_slice_array">
+<code class="descname">each_slice_array</code><span class="sig-paren">(</span><em>slices=1</em>, <em>block=None</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.each_slice_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.each_slice_double">
+<code class="descname">each_slice_double</code><span class="sig-paren">(</span><em>type=None</em>, <em>block=None</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.each_slice_double" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Browse the resourceSet two per two . </dt>
+<dd>This goes until the size of the ResourceSet.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; the type of the object could be either &#8220;node&#8221;  or &#8220;Resource_set&#8221;</li>
+<li><strong>block</strong> (<em>callable object</em>) &#8211; function or lambda function which will be call on every resource</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">this kind of resource browsing stick more with ruby functionnality than python one because Bloc are limited in python</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.each_slice_power2">
+<code class="descname">each_slice_power2</code><span class="sig-paren">(</span><em>type=None</em>, <em>block=None</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.each_slice_power2" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Browse the resourceSet exponentialy . </dt>
+<dd>This goes until the size of the ResourceSet.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; the type of the object could be either &#8220;node&#8221;  or &#8220;Resource_set&#8221;</li>
+<li><strong>block</strong> (<em>callable object</em>) &#8211; function or lambda function which will be call on every resource</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">this kind of resource browsing stick more with ruby functionnality than python one because Bloc are limited in python</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.eql">
+<code class="descname">eql</code><span class="sig-paren">(</span><em>set</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.eql" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equality between to resoruce sets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>set</strong> (<em>ResourceSet or Resource</em>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">result of the test</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.first">
+<code class="descname">first</code><span class="sig-paren">(</span><em>type=None</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the first element which is an object of the Resource Class</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>type</strong> (<a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; the type of the object could be &#8220;node&#8221;  or &#8220;Resource_set&#8221;</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#resourceSet.Resource" title="resourceSet.Resource">Resource</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.flatten">
+<code class="descname">flatten</code><span class="sig-paren">(</span><em>type=None</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.flatten" title="Permalink to this definition">¶</a></dt>
+<dd><p>Puts all the resource hierarchy into one ResourceSet.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>type</strong> (<a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; the type of the object could be either &#8220;node&#8221;  or &#8220;Resource_set&#8221;</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the ResourceSet with all resource faltened</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#resourceSet.ResourceSet" title="resourceSet.ResourceSet">ResourceSet</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.flatten_not">
+<code class="descname">flatten_not</code><span class="sig-paren">(</span><em>type=None</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.flatten_not" title="Permalink to this definition">¶</a></dt>
+<dd><p>flatten the current resourceSet</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>type</strong> (<a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; the type of the object could be either &#8220;node&#8221;  or &#8220;Resource_set&#8221;</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">flatten</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.make_taktuk_command">
+<code class="descname">make_taktuk_command</code><span class="sig-paren">(</span><em>cmd</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.make_taktuk_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the taktuk command</p>
+<p>Creates the taktuk command to execute on the ResourceSet
+It takes into account if the resources are grouped under
+different gatways in order to perform this execution more
+efficiently.</p>
+<p>..todo:: verify this function</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.select">
+<code class="descname">select</code><span class="sig-paren">(</span><em>type=None</em>, <em>props=None</em>, <em>block=None</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>select every resource of the given type which correspond to the props or the block ( see warnings ) and wrap it in a ResourceSet</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; the type of the object could be &#8220;node&#8221;  or &#8220;Resource_set&#8221;</li>
+<li><strong>props</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; props which the ressource should correspond to</li>
+<li><strong>block</strong> (<em>function or lambda function which return boolean</em>) &#8211; function or lambda function which return boolean</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">return a ResourceSet with all the resources which are selected</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#resourceSet.Resource" title="resourceSet.Resource">Resource</a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>&gt;&gt;&gt;r2 = r.select(&#8216;node&#8217;,block = (lambda x : x.name()==&#8217;tutu&#8217;))
+&gt;&gt;&gt;r1 = r.select(&#8216;node&#8217;,({&#8216;name&#8217;: &#8216;tutu&#8217;}))
+r1 = r2</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">correspond</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">if both parameters props and block are given only props will be treated</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.select_resource">
+<code class="descname">select_resource</code><span class="sig-paren">(</span><em>props</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.select_resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the first element which correspond to the properties given in parameters</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>props</strong> (<a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; props which the ressource should correspond to</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">return the selected Resource Object</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#resourceSet.Resource" title="resourceSet.Resource">Resource</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.to_resource">
+<code class="descname">to_resource</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.to_resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a resouce or an array of resources.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a resource or array of resources</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#resourceSet.Resource" title="resourceSet.Resource">Resource</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.uniq">
+<code class="descname">uniq</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.uniq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a ResourceSet with unique elements.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ResourceSet with unique elements</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#resourceSet.ResourceSet" title="resourceSet.ResourceSet">ResourceSet</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSet.uniq_aux">
+<code class="descname">uniq_aux</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSet.uniq_aux" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns same ResourceSet with unique elements.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">same ResourceSet with unique elements</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#resourceSet.ResourceSet" title="resourceSet.ResourceSet">ResourceSet</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="resourceSet.ResourceSetIterator">
+<em class="property">class </em><code class="descclassname">resourceSet.</code><code class="descname">ResourceSetIterator</code><span class="sig-paren">(</span><em>resource_set</em>, <em>type=None</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSetIterator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class ResourceSet heret from Resource</p>
+<p>it will look in every resourceSet contained in the initial resourceSet
+usefull to make a resourceSet iterable see example</p>
+<dl class="docutils">
+<dt>Attributes: </dt>
+<dd>current : index for the &#8216;(&lt;current element 
+iterator : a resourceSet element to browset element from a sub resourceSet 
+resource_set: initial resoureSet
+type : type of the init resourceSet</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">resourceSet</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resource_set</span> <span class="o">=</span> <span class="n">parser_xml</span><span class="p">(</span><span class="s2">&quot;resourceSet.xml&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ResourceSetIterator</span><span class="p">(</span><span class="n">resource_set</span> <span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">print</span> <span class="n">i</span> 
+<span class="go">node1</span>
+<span class="go">node2</span>
+<span class="go">node3</span>
+<span class="go">node4</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="resourceSet.ResourceSetIterator.next">
+<code class="descname">next</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSetIterator.next" title="Permalink to this definition">¶</a></dt>
+<dd><p>place the index current on the next element and return it</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the next resource</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">resource of the same type as the attributes type</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>it = ResouceSetIterator(resource_set,&#8221;node&#8221;)
+try :
+it.next()
+except StopIteration :
+...</p>
+<p>..warning:: Raise a Stopiteration at the end</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="resourceSet.ResourceSetIterator.resource">
+<code class="descname">resource</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.ResourceSetIterator.resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Give the current resource</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the current resource</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">resource of the same type as the attributes type</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="resourceSet.Rs_toxml">
+<code class="descclassname">resourceSet.</code><code class="descname">Rs_toxml</code><span class="sig-paren">(</span><em>rs</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.Rs_toxml" title="Permalink to this definition">¶</a></dt>
+<dd><p>function for parsing node into a xml</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>r</strong> (<a class="reference internal" href="#resourceSet.ResourceSet" title="resourceSet.ResourceSet"><em>ResourceSet</em></a>) &#8211; ResourceSet</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a node from Element tree</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Element tree</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="resourceSet.parser_xml">
+<code class="descclassname">resourceSet.</code><code class="descname">parser_xml</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.parser_xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>function to creat a ResrouceSet from an xml file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; the path of the xml file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the ResourceSet created</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#resourceSet.ResourceSet" title="resourceSet.ResourceSet">ResourceSet</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">parser_xml</span><span class="p">(</span><span class="s1">&#39;xml/rs1.xml&#39;</span><span class="p">)</span>
+<span class="go"> &lt;resourceSet.Resource object at .... &gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="resourceSet.prettify">
+<code class="descclassname">resourceSet.</code><code class="descname">prettify</code><span class="sig-paren">(</span><em>elem</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.prettify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a pretty-printed XML string for the Element.
+function taken from the site : <a class="reference external" href="https://pymotw.com/2/xml/etree/ElementTree/create.html">https://pymotw.com/2/xml/etree/ElementTree/create.html</a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="resourceSet.res_from_xml">
+<code class="descclassname">resourceSet.</code><code class="descname">res_from_xml</code><span class="sig-paren">(</span><em>tree</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.res_from_xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>function for xml parsing which return a Resource</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tree</strong> (<em>ElementTree</em>) &#8211; tree created with element tree</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Resource creatinf</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#resourceSet.Resource" title="resourceSet.Resource">Resource</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="resourceSet.xml_writer">
+<code class="descclassname">resourceSet.</code><code class="descname">xml_writer</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="headerlink" href="#resourceSet.xml_writer" title="Permalink to this definition">¶</a></dt>
+<dd><p>function to create xml data from a node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>r</strong> (<em>ResrousceSEt</em>) &#8211; ResrouceSet</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the xml created</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/source/resourceSet.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Timothée Lemaire - Nicolas Homberg.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/source/resourceSet.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
