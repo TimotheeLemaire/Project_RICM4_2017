@@ -4,8 +4,14 @@ import resourceSet
 import execo
 
 r=resourceSet.ResourceSet()
-r.append(resourceSet.Resource('node',{'gateway':'127.0.0.1'}))
+r.append(resourceSet.Resource('node',{'gateway':'127.0.0.1','port':'1'}))
+r.append(resourceSet.Resource('node',{'gateway':'127.0.0.1','port':'2'}))
+r2=resourceSet.ResourceSet()
+r2.append(r)
+r2.append(resourceSet.Resource('node',{'gateway':'127.0.0.1','port':'3'}))
 
-h = r.host()
+h = r2.hosts()[1]
 
-print h
+r = resourceSet.Resource( host = h, prop={'name':'boustricoule'})
+
+print r.properties
