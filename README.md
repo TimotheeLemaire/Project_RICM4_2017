@@ -17,4 +17,4 @@ The module resourceSet is fully fonctionnable and are compatible with normaly ev
 For now we have to convert the resourceSet into host using function named host.
 
 See the doc for more information about function : 
-* <a href="testRel/myLib">html/</a>
+* <a href="https://github.com/TimotheeLemaire/resourceSet-for-execo/blob/gh-pages/dev/docs/_build/html/source/resourceSet.html">Doc/</a>
