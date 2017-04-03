@@ -77,7 +77,7 @@ class Resource(object):
                 self.type = typ
             else :
                 self.type = 'node'
-            self.properties = {'address':host.address,'user':host.user,'keyfile':host.keyfile,'port':host.port}
+            self.properties = {'address':host.address,'user':host.user,'keyfile':host.keyfile,'port':str(host.port)}
             if prop : 
                 self.properties.update(prop)
             if name :
@@ -162,10 +162,16 @@ class Resource(object):
         """        
         for key,value in props.items():
             if callable(value) :
-                if not value(self.properties[key]):
+                if key in self.properties :
+                    if not value(self.properties[key]):
+                        return False
+                else : 
                     return False
             else :
-                if (self.properties[key] != value):
+                if key in self.properties :
+                    if (self.properties[key] != value):
+                        return False
+                else :
                     return False
         return True  # return props == self.preperties ? 
 
@@ -284,7 +290,7 @@ class Resource(object):
         else :
             keyfile = False
         if "port" in self.properties :
-            port = self.properties["port"]
+            port = int(self.properties["port"])
         else :
             port = False
         return execo.Host(address,user,keyfile,port)
@@ -1130,6 +1136,8 @@ def res_from_xml(tree):
         :return:  Resource creatinf
         :rtype: Resource
     """
+    name = None
+
     d_prop= dict()
     for child in tree :
         #print child.tag
@@ -1143,7 +1151,7 @@ def res_from_xml(tree):
        if child.tag == "name":
            name = child.text
     
-    res = Resource(type,d_prop,name)
+    res = Resource(type,prop=d_prop,name=name)
 
     return res 
 
