@@ -5,7 +5,7 @@ setup(
   packages = find_packages(exclude=['testing', 'docs', 'UML']), # this must be the same as the name above
   version = '0.1',
   description = 'resourceSet for http://execo.gforge.inria.fr/doc/latest-stable/ | School project at Polytech Grenoble : http://air.imag.fr/index.php/ExperimentControl',
-  long_description=open('README.md').read()
+  long_description=open('README.md').read(),
   author = 'Timothee Lemaire and Nicolas Homberg',
   author_email = 'nshg117@gmail.com',
   url = 'https://github.com/TimotheeLemaire/resourceSet_for_execo', # use the URL to the github repo
