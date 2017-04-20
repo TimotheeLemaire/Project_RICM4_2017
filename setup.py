@@ -1,8 +1,9 @@
 from distutils.core import setup 
-from setuptools import find_packages
+#from setuptools import find_packages
 setup(
   name = 'resourceSet_for_execo',
-  packages = find_packages(exclude=['testing', 'docs', 'UML']), # this must be the same as the name above
+  packages = ['resourceSet_for_execo'],
+  #packages = find_packages(exclude=['testing', 'docs', 'UML']), # this must be the same as the name above
   version = '0.1',
   description = 'resourceSet for http://execo.gforge.inria.fr/doc/latest-stable/ | School project at Polytech Grenoble : http://air.imag.fr/index.php/ExperimentControl',
   #long_description=open('README.md').read(),

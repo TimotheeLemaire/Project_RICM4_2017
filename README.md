@@ -4,10 +4,10 @@ Project realised by Timothée Lemaire and Nicolas Homberg for a student ingeneri
 
 ## How to instal the package : 
 
-The package is on Pypi so it should normaly work simply with : 
-```
-pip install resourceSet_for_execo 
-```
+The package is on Pypi so it should normaly work simply using pip : 
+
+```pip install resourceSet_for_execo ```
+
 ## subject of the project : 
 
 Enhance fonctionnalities of the library Execo. 
