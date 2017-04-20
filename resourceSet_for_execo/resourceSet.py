@@ -1,3 +1,7 @@
+"""
+	Authors : Timothée Lemaire & Nicolas Homberg
+	
+"""
 import copy
 import xml.etree.ElementTree as ET
 import execo
@@ -6,7 +10,7 @@ from xml.dom import minidom
 
 
 """
-    ``ResourceSet`` module omg
+    ``ResourceSet`` module
     ======================
  
     Used to gather resources into an object with several usefull functions 
