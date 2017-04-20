@@ -4,7 +4,9 @@ mydockerbuild/
 
 expo-master/
 
-resourceset_for_execo/
+resourceset_for_execo.*
+
+dist/
 
 *.pyc
 

@@ -1,10 +1,14 @@
-#Project_RICM4_2017
+# Project_RICM4_2017
 
 Project realised by Timothée Lemaire and Nicolas Homberg for a student ingenering project at Polytech grenoble.
 
+## How to instal the package : 
 
-
-##subject of the project : 
+The package is on Pypi so it should normaly work simply with : 
+```
+pip install resourceSet_for_execo 
+```
+## subject of the project : 
 
 Enhance fonctionnalities of the library Execo. 
 - [ ] Add notion a of session ( allow to handle state of an experiment)
