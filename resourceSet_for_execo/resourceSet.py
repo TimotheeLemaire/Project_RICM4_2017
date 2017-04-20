@@ -1,5 +1,5 @@
 """
-	Authors : Timothée Lemaire & Nicolas Homberg
+	Authors : Timothee Lemaire & Nicolas Homberg
 	
 """
 import copy
